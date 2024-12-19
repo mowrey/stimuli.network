@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimuli•Network–AI-Fused</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            background: url('AM.JPG') no-repeat center center;
+            background-size: cover;
+            color: white;
+            position: relative;
+        }
+
+        .menu {
+            width: 250px;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            transition: transform 0.3s ease;
+        }
+
+        .menu.hidden {
+            transform: translateX(-100%);
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            margin: 5px 10px;
+            transition: background 0.3s;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            font-size: 1.3em;
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1200;
+            background: #2c3e50;
+            border: none;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .tv-frame {
+            flex: 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        .tv {
+            width: 40%;
+            max-width: 400px;
+            aspect-ratio: 16 / 9;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            border: 12px solid transparent;
+            border-image: linear-gradient(135deg, #1e272e, #ffa502) 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tv iframe {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: none;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: auto;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.65);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            text-align: center;
+        }
+
+        .popup-title {
+            color: red;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .popup-text {
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            color: black;
+        }
+
+        .popup-text p {
+            margin: 8px 0;
+        }
+
+        .popup-text p:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background: #2c3e50;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .popup button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .menu {
+                transform: translateX(-100%);
+            }
+
+            .menu.hidden {
+                transform: translateX(-100%);
+            }
+
+            .menu.opened {
+                transform: translateX(0);
+            }
+
+            .tv-frame {
+                margin: 0;
+                margin-top: 60px;
+                padding: 10px;
+            }
+
+            .tv {
+                width: 90%;
+            }
+
+            .popup {
+                width: 90%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="menu">
+        <div class="menu-item" onclick="navigateTo('CryptoMarketCap')">
+            <i class="material-icons">show_chart</i> Crypto Market Cap
+        </div>
+        <div class="menu-item" onclick="navigateTo('CryptoBubbles')">
+            <i class="material-icons">show_chart</i> Crypto Bubbles
+        </div>
+        <div class="menu-item" onclick="navigateTo('Q*')">
+            <i class="material-icons" style="color: red;">star</i> [1m] Q*
+        </div>
+        <div class="menu-item" onclick="navigateTo('Satoshi Hat')">
+            <i class="material-icons" style="color: white;">star</i> [5m] Satoshi 🎩
+        </div>
+        <div class="menu-item" onclick="navigateTo('$niper')">
+            <i class="material-icons" style="color: navy;">star</i> [15m] $niper
+        </div>
+        <div class="menu-item" onclick="navigateTo('AIye')">
+            <i class="material-icons" style="color: gold;">star</i> [1h] AIye
+        </div>
+        <div class="menu-item" onclick="navigateTo('Why Crypto?')">
+            <i class="material-icons" style="color: yellow;">star</i> Why Crypto?
+        </div>
+    </div>
+    <div class="tv-frame">
+        <div class="tv">
+            <iframe 
+                id="vimeo-player" 
+                src="https://player.vimeo.com/video/1034382588?dnt=1&controls=0&autoplay=0&loop=1&muted=0&volume=0.5&title=0&byline=0&portrait=0" 
+                allow="autoplay; fullscreen; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+    <div id="disclaimer-popup" class="popup">
+        <div class="popup-title">DISCLAIMER!!</div>
+        <div class="popup-text">
+            <p>..this is <strong>NOT Financial Advice</strong>!!</p>
+            <p>the sources provided are for informational<br />and educational purposes <strong>ONLY</strong>..</p>
+            <p>keep in mind that <strong>TradingView</strong> might require you<br />to be logged in for the indicators to load properly..</p>
+            <p><strong>Matrix</strong>' too weak for me 💸😁<br />perpetually in charge of any financial market..</p>
+            <p>click <strong>OK</strong> to proceed.. 👽</p>
+        </div>
+        <button onclick="closePopup()">OK</button>
+    </div>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.menu').classList.toggle('hidden');
+            document.querySelector('.menu').classList.toggle('opened');
+        }
+
+        function navigateTo(option) {
+            const urlMap = {
+                'CryptoMarketCap': "https://cryptomarketcap.com",
+                'CryptoBubbles': "https://cryptobubbles.net",
+                'Q*': "https://www.tradingview.com/chart/lQi36OWp/?symbol=BTCUSDT",
+                'Satoshi Hat': "https://www.tradingview.com/chart/sOJufKCP/?symbol=BTCUSDT",
+                '$niper': "https://www.tradingview.com/chart/6SeshY9Q/?symbol=BTCUSDT",
+                'AIye': "https://www.tradingview.com/chart/VdjpSEYA/?symbol=BTCUSDT",
+                'Why Crypto?': "https://github.com/mowrey/stimuli.network/blob/main/Cryptocurrencies%20-%20Transparency%2C%20Trust%20and%20Security.pdf"
+            };
+
+            if (urlMap[option]) window.location.href = urlMap[option];
+        }
+
+        function closePopup() {
+            document.getElementById('disclaimer-popup').style.display = 'none';
+            const player = new Vimeo.Player(document.querySelector('#vimeo-player'));
+            player.play();
+        }
+
+        const player = new Vimeo.Player(document.querySelector('#vimeo-player'));
+
+        player.ready().then(() => {
+            player.setCurrentTime(10);
+            player.pause();
+        });
+    </script>
+</body>
+</html>
