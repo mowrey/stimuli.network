@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimuli Network</title>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            flex-direction: column;
+        }
+
+        header h1 {
+            margin: 0 0 5px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            transition: opacity 1s ease, transform 1s ease;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        header h1.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 1em;
+            font-weight: 600;
+            background: linear-gradient(to right, #6ee7b7, #3b82f6, #d946ef);
+            -webkit-background-clip: text;
+            color: transparent;
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+
+        header h2:hover {
+            transform: scale(1.05);
+        }
+
+        header nav {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li {
+            margin: 0 20px;
+        }
+
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        header nav ul li a:hover {
+            color: #1da1f2;
+            transform: translateY(-2px);
+        }
+
+        main {
+            padding: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 60px;
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        section h2 {
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #000;
+            color: #888;
+            padding: 25px 0;
+            text-align: center;
+            border-top: 1px solid #222;
+            margin-top: 60px;
+        }
+
+        /* --- Posts Styles --- */
+        .post {
+            background-color: #000;
+            border: 1px solid #222;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            max-height: 100px;
+        }
+
+        .post:hover {
+            border-color: #1da1f2;
+            box-shadow: 0 5px 15px rgba(29, 161, 242, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .post-author {
+            font-weight: bold;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid #333;
+        }
+
+        .post-date {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .post-content {
+            line-height: 1.7;
+            font-size: 1em;
+            color: #eee;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .post.open .post-content {
+            -webkit-line-clamp: none;
+            overflow: visible;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: #888;
+            margin-right: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            transition: color 0.3s ease, transform 0.2s ease;
+            border-radius: 5px;
+        }
+
+        .post-actions button:hover {
+            color: #fff;
+            transform: scale(1.2);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .post-actions button svg {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            fill: currentColor;
+            stroke: none;
+            vertical-align: middle;
+            margin-right: 0.25em;
+        }
+
+        /* --- About Section --- */
+        #about {
+            background-color: #000;
+            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #about h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        #about p {
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1em;
+            max-width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: opacity 1s ease;
+            opacity: 0;
+        }
+
+        #about p.show{
+            opacity: 1;
+        }
+
+        /* --- Creative Resume Section --- */
+        #resume {
+            background-color: #000;
+            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center; /* Center the content */
+        }
+        #resume h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-align: center;
+        }
+        #resume p {
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1em;
+            max-width: 80%;
+            margin: 0 auto;
+            text-align: left;
+        }
+        #resume ul {
+            list-style-position: inside;
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1em;
+            max-width: 80%;
+            margin: 0 auto;
+            padding-left: 0;
+            text-align: left; /* Align list to the left */
+        }
+        #resume h3 {
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header h2{
+                font-size: 1.2em
+            }
+            main {
+                padding: 20px;
+            }
+            section {
+                margin-bottom: 50px;
+            }
+            .post {
+                padding: 15px;
+            }
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+            header nav {
+                margin-top: 15px;
+            }
+            header nav ul li {
+                margin: 10px 15px;
+            }
+            section h2{
+                font-size: 2em;
+            }
+            #about p{
+                font-size: 0.9em;
+            }
+        }
+
+        /* --- Modal Styles --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #000;
+            color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #888;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .close-button:hover {
+            color: #fff;
+        }
+
+        .modal-post-content {
+            line-height: 1.7;
+            font-size: 1.1em;
+            color: #eee;
+        }
+
+        .read-more {
+            color: #1da1f2;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Pagination Styles --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pagination button {
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #222;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #1da1f2;
+            border-color: #1da1f2;
+        }
+
+        .pagination button.active {
+            background-color: #1da1f2;
+            border-color: #1da1f2;
+            font-weight: bold;
+        }
+
+        .pagination button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            border-color: #555;
+        }
+
+        /* The background pop-up */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 9999; /* Ensure pop-up is on top */
+        }
+
+        .popup-content {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup .yes-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .popup .no-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Hide the YouTube iframe */
+        #yt-video {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none; /* Prevent interaction with the iframe */
+            z-index: -1; /* Put iframe behind the pop-up */
+        }
+
+    </style>
+    
+</head>
+<body>
+    <!-- YouTube Video iframe (will be controlled via API) -->
+    <div id="player"></div>
+
+    <!-- Pop-up for Music Choice -->
+    <div class="popup" id="music-popup">
+        <div class="popup-content">
+            <p>Do you want background music?</p>
+            <button class="yes-btn" onclick="startMusic()">Yes</button>
+            <button class="no-btn" onclick="stopMusic()">No</button>
+        </div>
+    </div>
+    
+    <header>
+        <h1 class="hidden" id="stimuli-header">Stimuli Network</h1>
+        <h2 id="synapse-header">..empowering innovation through</h2>
+        <nav>
+            <ul>
+                <li><a href="#posts">Posts</a></li>
+                <li><a href="#resume">Résumé</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="posts" class="active">
+            <div class="container">
+                <h2>Posts</h2>
+                <div id="posts-container">
+                </div>
+                <div class="pagination" id="posts-pagination">
+                </div>
+            </div>
+        </section>
+
+        <section id="resume">
+            <div class="container">
+                <img src="images/0045.jpg" alt="Adrian Mowrey" style="width: 150px; height: 175px; border-radius: 50%; margin-bottom: 5px;">
+                
+                <h1>Adrian Mowrey</h1>
+
+                <p>A versatile professional with a strong foundation in technical analysis, cybersecurity, and software engineering, coupled with hands-on experience in project management and advanced technology integration. Driven to leverage this diverse expertise to educate and inspire future generations in computer science and cybersecurity.</p>
+
+                <h3>Education</h3>
+                
+                <p>Adrian's academic journey has been uniquely broad, fostering a deep and multifaceted understanding of computer science and cybersecurity. His studies across multiple institutions have provided a comprehensive knowledge base, ideal for teaching and professing in these dynamic fields:</p><br/>
+                
+                <ul>
+                    <li><strong>Broad and Diverse Studies:</strong> Pursuit of knowledge across numerous institutions, including Colorado State University Global, Kennesaw State University, Minot State University, Minnesota State University Moorhead, Dakota State University, Bemidji State University, and Central Georgia Technical College.</li>
+                    <li><strong>Specialized Knowledge:</strong> Focused studies in Computer Science and Cybersecurity, providing a well-rounded understanding of both theoretical and practical applications.</li>
+                    <li><strong>Commitment to Education:</strong> This diverse background is a strong asset for teaching, enabling a comprehensive approach to complex technical subjects.</li>
+                </ul>
+                
+                <h3>Experience</h3>
+                
+                <ul>
+                    <li>
+                        <strong>Fun Spot Manufacturing LLC, Project Manager (2024-2025)</strong>
+                        <ul>
+                            <li>Led project development and automation using AI, creating high-performance spreadsheets for nationwide trampoline park operations.</li>
+                            <li>Managed nationwide project oversight, including business travel and on-site support.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Bemidji State University, IT Specialist (Student Worker) (2017)</strong>
+                        <ul>
+                            <li>Provided comprehensive technical support to students and staff.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Triumph Aerospace Inc. (2007-2014)</strong>
+                        <ul>
+                            <li>Held diverse roles in manufacturing, including CNC operation and engineering support, with contractor experience on the 787-8 Dreamliner.</li>
+                            <li>Performed CNC operations, including calibration, probing, milling, and drilling.</li>
+                            <li>Contributed to final assembly and paint shop operations, with responsibilities for training and system changes.</li>
+                            <li>Served as a contractor from Vought Aircraft Industries Inc., supporting engineering revisions for the 787-8 Dreamliner at Boeing Inc. in Everett, WA.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Skills</h3>
+                <ul>
+                    <li>Artificial Intelligence</li>
+                    <li>Full-Stack Web Development</li>
+                    <li>Project Management</li>
+                </ul>
+
+                <h3>Awards and Recognition</h3>
+                <ul>
+                    <li>Certified Software Developer, LINK Academy (2012)</li>
+                    <li>Imagine Cup, Software Design Semi-Finalist (2009)</li>
+                    <li>President's List of Outstanding Students, C.G.T.C. (2009)</li>
+                    <li>Certified in Financial and Commercial Activities (2004)</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Stimuli Network. All rights reserved.</p>
+    </footer>
+
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post</h2>
+                <button id="closeModal" class="close-button">×</button>
+            </div>
+            <div id="modalPostContent" class="modal-post-content">
+            </div>
+        </div>
+    </div>
+
+    <script>
+       // --- Get DOM Elements ---
+        const navLinks = document.querySelectorAll('header nav ul li a');
+        const sections = document.querySelectorAll('main > section');
+        const postsContainer = document.getElementById('posts-container');
+        const stimuliHeader = document.getElementById('stimuli-header');
+        const synapseHeader = document.getElementById('synapse-header');
+        const modal = document.getElementById('postModal');
+        const modalContent = document.getElementById('modalPostContent');
+        const closeModalBtn = document.getElementById('closeModal');
+        const quantumAnimationContainer = document.getElementById('quantum-animation-container');
+        const postsPagination = document.getElementById('posts-pagination');
+
+        // --- Data ---
+        let allPosts = [
+            {
+                author: "Google AI Studio: Your Gateway to Tomorrow's AI is HERE!",
+                date: "Mar 20, 2025",
+                content: `
+                    Hold onto your hats, innovators—the future of artificial intelligence is no longer a distant dream; it's in your hands with Google AI Studio! 🚀<br/>
+                    <p>Prepare to be amazed!</p>
+                    <p>Imagine a playground where you can bring your wildest AI ideas to life, experiment, iterate, and build groundbreaking applications using Google's cutting-edge AI models—stop imagining, because Google AI Studio is that reality!</p>
+                    <p>Forget complex setups and endless coding headaches; AI Studio offers an intuitive, user-friendly interface empowering everyone, from seasoned developers to curious creators, to dive into AI effortlessly.</p>
+                    <p>Here's just a glimpse of the magic you can unlock:</p>
+                    <ul>
+                        <li><strong>Effortless Prototyping:</strong> Turn innovative concepts into prototypes faster than ever.</li>
+                        <li><strong>Access to Powerful Models:</strong> Tap into Google's state-of-the-art AI models to tackle complex challenges.</li>
+                        <li><strong>Intuitive Interface:</strong> No PhD in AI required, making experimentation accessible and fun.</li>
+                        <li><strong>Rapid Iteration:</strong> Quickly test, refine, and improve AI creations with seamless feedback loops.</li>
+                        <li><strong>Unleash Your Creativity:</strong> From generating captivating content to building intelligent assistants, the possibilities are limitless!</li>
+                    </ul>
+                    <p>Google AI Studio isn't just a tool—it’s a glimpse into the future, representing the next generation of AI capabilities and putting the power to build intelligent solutions directly into your hands.</p>
+                    <p>Whether you're looking to revolutionize your industry, create the next viral sensation, or simply explore AI, this is your starting point.</p>
+                    <p><strong>Ready to witness the dawn of tomorrow’s AI?</strong></p>
+                    <p>🔥 <strong>Dive into Google AI Studio today and start building the future!</strong> 🔥</p>
+                `,
+            },
+            {
+                author: "Decoding Market Whispers: An Introduction to Technical Analysis",
+                date: "Mar 22, 2025",
+                content: `
+    
+                    <p>Financial markets can seem chaotic to beginners, filled with endless numbers and news. However, beneath this apparent randomness lie patterns—subtle whispers of potential future price movements. This is where <strong>technical analysis</strong> comes in: a powerful toolkit for traders navigating market complexities.</p>
+                    
+                    <h2>What is Technical Analysis?</h2>
+                    <p>Technical analysis is the study of historical market data, primarily <strong>price and volume</strong>, to identify patterns and predict future trends. Unlike <strong>fundamental analysis</strong>, which evaluates a company's financial health, technical analysis assumes that <strong>all relevant market information is already reflected in price action</strong> and that history tends to repeat itself.</p>
+                    
+                    <h2>Key Concepts and Tools</h2>
+                    
+                    <h3>Charts: Visualizing Market Movements</h3>
+                    <ul>
+                        <li><strong>Line Charts</strong> – Connect closing prices to show overall trends.</li>
+                        <li><strong>Bar Charts</strong> – Display open, high, low, and close prices for each period.</li>
+                        <li><strong>Candlestick Charts</strong> – Similar to bar charts but visually highlight price range and direction.</li>
+                    </ul>
+                    
+                    <h3>Trends: Following the Market's Direction</h3>
+                    <ul>
+                        <li><strong>Uptrend</strong> – Higher highs and higher lows.</li>
+                        <li><strong>Downtrend</strong> – Lower highs and lower lows.</li>
+                        <li><strong>Sideways Trend (Consolidation)</strong> – Price moves within a range.</li>
+                    </ul>
+                    
+                    <h3>Support and Resistance: Key Price Levels</h3>
+                    <ul>
+                        <li><strong>Support</strong> – A price level where buying pressure is strong enough to prevent further declines.</li>
+                        <li><strong>Resistance</strong> – A price level where selling pressure prevents further increases.</li>
+                    </ul>
+                    
+                    <h3>Moving Averages: Smoothing Market Noise</h3>
+                    <ul>
+                        <li><strong>Simple Moving Average (SMA)</strong> – An average of closing prices over a set period.</li>
+                        <li><strong>Exponential Moving Average (EMA)</strong> – Gives more weight to recent prices for a faster response.</li>
+                    </ul>
+                    
+                    <h3>Indicators and Oscillators: Deciphering Market Signals</h3>
+                    <ul>
+                        <li><strong>Relative Strength Index (RSI)</strong> – Measures momentum; values above 70 suggest overbought conditions, while below 30 suggests oversold conditions.</li>
+                        <li><strong>Moving Average Convergence Divergence (MACD)</strong> – Identifies trend changes by analyzing the relationship between two moving averages.</li>
+                        <li><strong>Bollinger Bands</strong> – Measure volatility and highlight potential breakout opportunities.</li>
+                    </ul>
+                    
+                    <h3>Chart Patterns: Spotting Market Behavior</h3>
+                    <ul>
+                        <li><strong>Head and Shoulders</strong> – A reversal pattern signaling a potential trend change.</li>
+                        <li><strong>Double Top/Bottom</strong> – Indicates a likely reversal of an existing trend.</li>
+                        <li><strong>Triangles</strong> – Suggest market consolidation before a breakout.</li>
+                    </ul>
+                    
+                    <h3>Volume: Understanding Market Strength</h3>
+                    <p>Volume refers to the number of shares or contracts traded during a period. Higher volume during price movements suggests strong market conviction, while low volume can indicate weakness in the trend.</p>
+                    
+                    <h2>Why Use Technical Analysis?</h2>
+                    <ul>
+                        <li><strong>Identify Trends</strong> – Helps traders recognize and capitalize on prevailing market trends.</li>
+                        <li><strong>Determine Entry and Exit Points</strong> – Provides signals for potential buy and sell opportunities.</li>
+                        <li><strong>Manage Risk</strong> – Assists in setting stop-loss orders and controlling risk exposure.</li>
+                        <li><strong>Improve Timing</strong> – Helps traders enter and exit positions at optimal moments.</li>
+                    </ul>
+                    
+                    <h2>Where to Find Powerful Indicators</h2>
+                    <p>To enhance your technical analysis toolkit, explore the advanced indicators available at <strong>trade.stimuli.network</strong>. This platform offers sophisticated tools that leverage data-driven insights to help traders make informed decisions. By using cutting-edge algorithms, these indicators provide an <strong>edge in identifying market opportunities</strong>—making them a must-have for serious traders.</p>
+                    
+                    <h2>Final Thoughts: Key Considerations</h2>
+                    <ul>
+                        <li><strong>Technical analysis is not foolproof</strong>—market conditions can shift rapidly, and no indicator guarantees profits.</li>
+                        <li><strong>It works best alongside risk management</strong>—always set stop-loss orders and position sizes accordingly.</li>
+                        <li><strong>Experience matters</strong>—the more you analyze charts and patterns, the sharper your skills will become.</li>
+                    </ul>
+                    
+                    <p>Understanding the principles and tools of technical analysis can <strong>empower traders</strong> to navigate the markets with confidence. With practice and the right resources, you can <strong>decode market whispers</strong> and make informed trading decisions.</p>
+                `,
+            }
+        ];
+
+        let headerTimeout;
+        const postsPerPage = 5;
+        let currentPage = 1;
+
+        // --- Helper Functions ---
+
+        /**
+         * Renders the posts for the current page.
+         */
+        function renderPosts() {
+            postsContainer.innerHTML = '';
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const currentPosts = allPosts.slice().reverse().slice(startIndex, endIndex);
+
+            currentPosts.forEach(post => {
+                const postElement = createPostElement(post);
+                postsContainer.appendChild(postElement);
+            });
+            renderPagination();
+        }
+
+        /**
+        * Creates a single post element.
+        */
+        function createPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'post-header';
+
+            const authorSpan = document.createElement('span');
+            authorSpan.className = 'post-author';
+            authorSpan.innerHTML = `<img src="images/92110733.jpeg" alt="Adrian Mowrey" style="border-radius: 50%;"> Adrian`;
+
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'post-date';
+            dateSpan.textContent = post.date;
+
+            headerDiv.appendChild(authorSpan);
+            headerDiv.appendChild(dateSpan);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'post-content';
+            contentDiv.innerHTML = post.content; // Use innerHTML to render HTML tags
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'post-actions';
+
+            const readMoreLink = document.createElement('span');
+            readMoreLink.className = 'read-more';
+            readMoreLink.textContent = '';
+            readMoreLink.addEventListener('click', (event) => {
+                event.stopPropagation();
+                openModal(post);
+            });
+            if (post.content.length > 100) {
+                contentDiv.appendChild(readMoreLink);
+            }
+
+            postDiv.appendChild(headerDiv);
+            postDiv.appendChild(contentDiv);
+
+            postDiv.addEventListener('click', () => {
+                openModal(post);
+            });
+
+            return postDiv;
+        }
+
+        /**
+         * Opens the modal with the full post content.
+         */
+        function openModal(post) {
+            modalContent.innerHTML = `
+                <h2>${post.author}</h2>
+                <p class="post-date">${post.date}</p>
+<p>${post.content}</p>
+            `;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        /**
+         * Closes the modal.
+         */
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+            modalContent.innerHTML = '';
+        }
+
+        /**
+         * Switches the active section.
+         */
+        function switchSection(sectionId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            if (sectionId === 'posts') {
+                currentPage = 1;
+                renderPosts();
+           }
+        }
+
+        // --- Event Listeners ---
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                switchSection(targetId);
+            });
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // --- Initial Render ---
+        switchSection('posts');
+
+
+        // --- "Stimuli Network" Animation ---
+        headerTimeout = setTimeout(() => {
+            stimuliHeader.classList.add('show');
+            setTimeout(()=> {
+                synapseHeader.textContent = '..a unified perception framework';
+            }, 2500)
+        }, 500);
+
+       // --- Quantum Flag Animation ---
+        let quantumNodes = [];
+        function initQuantumAnimation() {
+            const containerRect = quantumAnimationContainer.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const containerHeight = containerRect.height;
+
+            quantumAnimationContainer.innerHTML = '';
+
+            const numNodes = 3;
+            const baseNodeSize = Math.min(containerWidth, containerHeight) * 0.1;
+            const minX = containerWidth * 0.1;
+            const maxX = containerWidth * 0.9;
+
+            quantumNodes = [];
+            for (let i = 0; i < numNodes; i++) {
+                const x = minX + (maxX - minX) * (i / (numNodes -1 ));
+                const y = containerHeight / 2;
+                quantumNodes.push({
+                    x: x,
+                    y: y,
+                    radius: baseNodeSize,
+                    color: ['#007bff', '#28a745', '#dc3545'][i],
+                    pulse: 1,
+                    pulseSpeed: 0.02,
+                    maxPulse: 1.3,
+                    minPulse: 1,
+                    phase: i * Math.PI * 2 / numNodes,
+                });
+            }
+
+            function animate() {
+                quantumAnimationContainer.innerHTML = '';
+                quantumNodes.forEach(node => {
+                    // Pulse effect
+                    node.pulse += node.pulseSpeed;
+                    if (node.pulse > node.maxPulse) {
+                        node.pulseSpeed = -0.02;
+                        node.pulse = node.maxPulse;
+                    } else if (node.pulse < node.minPulse) {
+                        node.pulseSpeed = 0.02;
+                        node.pulse = node.minPulse;
+                    }
+
+                    const actualRadius = node.radius * node.pulse;
+                    const nodeElement = document.createElement('div');
+                    nodeElement.className = 'blockchain-node';
+                    nodeElement.style.width = `${actualRadius * 2}px`;
+                    nodeElement.style.height = `${actualRadius * 2}px`;
+                    nodeElement.style.backgroundColor = node.color;
+                    nodeElement.style.left = `${node.x - actualRadius}px`;
+                    nodeElement.style.top = `${node.y - actualRadius}px`;
+                    quantumAnimationContainer.appendChild(nodeElement);
+
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        if (quantumAnimationContainer) {
+            initQuantumAnimation();
+        }
+
+        // --- Pagination ---
+        function renderPagination() {
+            postsPagination.innerHTML = '';
+            const totalPages = Math.ceil(allPosts.length / postsPerPage);
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    renderPosts();
+                });
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                postsPagination.appendChild(pageButton);
+            }
+            // Add "Previous" and "Next" buttons
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPosts();
+                }
+            });
+            postsPagination.insertBefore(prevButton, postsPagination.firstChild);
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPosts();
+                }
+            });
+            postsPagination.appendChild(nextButton);
+        }
+
+        // --- Initial render logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Remove the 'Home' link
+            const homeLink = document.querySelector('header nav ul li a[href="#about"]');
+            if (homeLink) {
+                homeLink.parentNode.remove();
+            }
+            //set posts as default
+            switchSection('posts');
+        });
+
+        // 1. Load the YouTube Iframe API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // 2. Create the YouTube Player
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '1',
+                width: '1',
+                videoId: 'jOd-7vLLBdM', // Video ID from the URL
+                playerVars: {
+                    autoplay: 1,
+                    mute: 1, // Start muted
+                    loop: 1,
+                    playlist: 'jOd-7vLLBdM',
+                    controls: 0,
+                    showinfo: 0,
+                    modestbranding: 1
+                }
+            });
+        }
+
+        // 3. Show the pop-up when the page loads
+        window.onload = function() {
+            document.getElementById('music-popup').style.display = 'flex';
+        }
+
+        // 4. Start playing the music (unmute) when user clicks "Yes"
+        function startMusic() {
+            player.unMute(); // Unmute the video
+            document.getElementById('music-popup').style.display = 'none'; // Hide the pop-up
+        }
+
+        // 5. Stop the music (mute) when user clicks "No"
+        function stopMusic() {
+            player.mute(); // Mute the video
+            document.getElementById('music-popup').style.display = 'none'; // Hide the pop-up
+        }
+        
+    </script>
+</body>
+</html>
