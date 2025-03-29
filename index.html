@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimuli Network</title>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            flex-direction: column;
+        }
+
+        header h1 {
+            margin: 0 0 5px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            transition: opacity 1s ease, transform 1s ease;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        header h1.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 1em;
+            font-weight: 600;
+            background: linear-gradient(to right, #6ee7b7, #3b82f6, #d946ef);
+            -webkit-background-clip: text;
+            color: transparent;
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+
+        header h2:hover {
+            transform: scale(1.05);
+        }
+
+        header nav {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li {
+            margin: 0 20px;
+        }
+
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        header nav ul li a:hover {
+            color: #1da1f2;
+            transform: translateY(-2px);
+        }
+
+        main {
+            padding: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 60px;
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        section h2 {
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #000;
+            color: #888;
+            padding: 25px 0;
+            text-align: center;
+            border-top: 1px solid #222;
+            margin-top: 60px;
+        }
+
+        .post {
+            background-color: #000;
+            border: 1px solid #222;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            max-height: 100px;
+        }
+
+        .post:hover {
+            border-color: #1da1f2;
+            box-shadow: 0 5px 15px rgba(29, 161, 242, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .post-author {
+            font-weight: bold;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid #333;
+        }
+
+        .post-date {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .post-content {
+            line-height: 1.7;
+            font-size: 1em;
+            color: #eee;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #about {
+            background-color: #000;
+            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #about h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        #about p {
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1em;
+            max-width: 80%;
+            margin: 0 auto 1em auto;
+            text-align: center;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: opacity 1s ease;
+            opacity: 0;
+        }
+        #about p:last-child {
+             margin-bottom: 0;
+        }
+
+        #about p.show{
+            opacity: 1;
+        }
+
+        #resume {
+            background-color: #000;
+            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #resume .container {
+             max-width: 100%;
+        }
+
+        #resume h1 { /* Name heading */
+             font-size: 2em;
+             margin-top: 10px;
+             margin-bottom: 15px;
+             color: #fff;
+             font-weight: bold;
+        }
+
+        #resume p {
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1em;
+            max-width: 90%;
+            margin: 0 auto 1.5em auto;
+            text-align: left;
+        }
+        #resume ul p {
+            margin-bottom: 0.5em;
+        }
+         #resume p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        #resume ul {
+            list-style-position: outside;
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1em;
+            max-width: 90%;
+            margin: 0 auto 1.5em auto;
+            padding-left: 20px;
+            text-align: left;
+        }
+         #resume ul ul {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+         }
+
+        #resume li {
+            margin-bottom: 0.75em;
+        }
+        #resume ul ul li {
+             margin-bottom: 0.25em;
+        }
+
+
+        #resume h3 {
+            text-align: left;
+            max-width: 90%;
+            margin: 2em auto 1em auto;
+            font-size: 1.5em;
+            color: #eee;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header h2{
+                font-size: 1.2em
+            }
+            main {
+                padding: 20px;
+            }
+            section {
+                margin-bottom: 50px;
+            }
+            .post {
+                padding: 15px;
+            }
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+            header nav {
+                margin-top: 15px;
+            }
+            header nav ul li {
+                margin: 10px 15px;
+            }
+            section h2{
+                font-size: 2em;
+            }
+            #about p{
+                font-size: 0.9em;
+            }
+             #resume p, #resume ul, #resume h3 {
+                max-width: 95%;
+            }
+            #resume h1 {
+                 font-size: 1.8em;
+            }
+            #resume h3 {
+                 font-size: 1.3em;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #000;
+            color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #888;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .close-button:hover {
+            color: #fff;
+        }
+
+        .modal-post-content {
+            line-height: 1.7;
+            font-size: 1.1em;
+            color: #eee;
+        }
+        .modal-post-content p {
+            margin-bottom: 1em;
+        }
+        .modal-post-content ul {
+            margin-bottom: 1em;
+            padding-left: 20px;
+        }
+         .modal-post-content h2,
+         .modal-post-content h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .read-more {
+            color: #1da1f2;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pagination button {
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #222;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background-color: #1da1f2;
+            border-color: #1da1f2;
+        }
+
+        .pagination button.active {
+            background-color: #1da1f2;
+            border-color: #1da1f2;
+            font-weight: bold;
+        }
+
+        .pagination button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            border-color: #555;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 9999;
+        }
+
+        .popup-content {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup .yes-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .popup .no-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #player {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+            border: none;
+            overflow: hidden;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="player"></div>
+
+    <div class="popup" id="music-popup">
+        <div class="popup-content">
+            <span>Want background music?</span><br/>
+            <button class="yes-btn" onclick="startMusic()">Yes</button>
+            <button class="no-btn" onclick="stopMusic()">No</button>
+        </div>
+    </div>
+
+    <header>
+        <h1 class="hidden" id="stimuli-header">Stimuli Network</h1>
+        <h2 id="synapse-header">..empowering innovation through</h2>
+        <nav>
+            <ul>
+                <li><a href="#posts">Posts</a></li>
+                <li><a href="#resume">Résumé</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="posts" class="active">
+            <div class="container">
+                <h2>Posts</h2>
+                <div id="posts-container">
+                    <!-- Posts loaded via JS -->
+                </div>
+                <div class="pagination" id="posts-pagination">
+                    <!-- Pagination controls will be rendered here by JS *if* totalPages > 1 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ####################################################### -->
+        <!-- ##### START: Resume Section (Name Re-added)      ##### -->
+        <!-- ####################################################### -->
+        <section id="resume">
+            <div class="container">
+                <img src="images/0045.jpg" alt="Adrian Mowrey" style="width: 150px; height: 175px; border-radius: 50%; margin-bottom: 5px;">
+                <h1>Adrian Mowrey</h1>
+
+                <p>Possesses a strong background in software engineering, cybersecurity, and technical analysis, complemented by hands-on experience managing projects and working with new technologies. Passionate about teaching and aims to use this varied experience to help students get started in computer science and cybersecurity.</p>
+
+                <h3>Education</h3>
+                <p>Studies in Computer Science and Cybersecurity across several institutions have provided a solid understanding of both the theory and the practical side of these fields. This broad experience enables effective breakdown of complex topics and student mentorship.</p>
+                <p><em>Institutions Attended Include:</em> Colorado State University Global, Kennesaw State University, Minot State University, Minnesota State University Moorhead, Dakota State University, Bemidji State University, Central Georgia Technical College.</p>
+
+                <h3>Experience</h3>
+                <ul>
+                    <li>
+                        <strong>Fun Spot Manufacturing LLC, Project Manager (2024-2025)</strong>
+                        <ul>
+                            <li>Spearheaded project development, leveraging AI for automation and creating advanced spreadsheet solutions to optimize nationwide trampoline park operations.</li>
+                            <li>Directed nationwide project execution, including business travel and providing critical on-site support across various locations.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Bemidji State University, IT Specialist (Student Worker) (2017)</strong>
+                        <ul>
+                            <li>Delivered comprehensive technical support and troubleshooting assistance to students and university staff, ensuring smooth operation of IT resources.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Triumph Aerospace Inc. (Vought Aircraft Industries Inc.) (2007-2014)</strong>
+                        <ul>
+                            <li>Played integral roles across multiple manufacturing functions, including precision CNC machining (calibration, probing, milling, drilling) and vital engineering support.</li>
+                            <li>Contributed significantly to final assembly and paint shop operations for complex aerospace components, ensuring quality and adherence to specifications.</li>
+                            <li>Entrusted with training responsibilities and implementing system changes within dynamic production environments.</li>
+                            <li>Selected as a contractor (via Vought Aircraft Industries Inc.) to support critical engineering revisions for the high-profile Boeing 787-8 Dreamliner program at Boeing Inc. in Everett, WA.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <h3>Skills</h3>
+                <ul>
+                    <li>Artificial Intelligence & Automation</li>
+                    <li>Full-Stack Web Development</li>
+                    <li>Project Management & Execution</li>
+                </ul>
+                <h3>Awards and Recognition</h3>
+                <ul>
+                    <li>Certified Software Developer, LINK Academy (2013)</li>
+                    <li>Imagine Cup, Software Design Semi-Finalist (2009)</li>
+                    <li>President's List of Outstanding Students, C.G.T.C. (2009)</li>
+                    <li>Certified in Financial and Commercial Activities (2004)</li>
+                </ul>
+            </div>
+        </section>
+        <!-- ##################################################### -->
+        <!-- ##### END: Resume Section (Name Re-added)        ##### -->
+        <!-- ##################################################### -->
+
+    </main>
+
+    <footer>
+        <p>© 2025 Stimuli Network. All rights reserved.</p>
+    </footer>
+
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post</h2>
+                <button id="closeModal" class="close-button">×</button>
+            </div>
+            <div id="modalPostContent" class="modal-post-content">
+                <!-- Content loaded via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navLinks = document.querySelectorAll('header nav ul li a');
+        const sections = document.querySelectorAll('main > section');
+        const postsContainer = document.getElementById('posts-container');
+        const stimuliHeader = document.getElementById('stimuli-header');
+        const synapseHeader = document.getElementById('synapse-header');
+        const modal = document.getElementById('postModal');
+        const modalContent = document.getElementById('modalPostContent');
+        const closeModalBtn = document.getElementById('closeModal');
+        const postsPagination = document.getElementById('posts-pagination');
+
+        const allPosts = [
+            {
+              author: "Google AI Studio: Your Gateway to Tomorrow's AI is HERE!",
+              date: "Mar 5, 2025",
+              content: `Hold onto your hats, innovators—the future of artificial intelligence is no longer a distant dream; it's in your hands with Google AI Studio! 🚀<br/><p>Prepare to be amazed!</p><p>Imagine a playground where you can bring your wildest AI ideas to life, experiment, iterate, and build groundbreaking applications using Google's cutting-edge AI models—stop imagining, because Google AI Studio is that reality!</p><p>Forget complex setups and endless coding headaches; AI Studio offers an intuitive, user-friendly interface empowering everyone, from seasoned developers to curious creators, to dive into AI effortlessly.</p><p>Here's just a glimpse of the magic you can unlock:</p><ul><li><strong>Effortless Prototyping:</strong> Turn innovative concepts into prototypes faster than ever.</li><li><strong>Access to Powerful Models:</strong> Tap into Google's state-of-the-art AI models to tackle complex challenges.</li><li><strong>Intuitive Interface:</strong> No PhD in AI required, making experimentation accessible and fun.</li><li><strong>Rapid Iteration:</strong> Quickly test, refine, and improve AI creations with seamless feedback loops.</li><li><strong>Unleash Your Creativity:</strong> From generating captivating content to building intelligent assistants, the possibilities are limitless!</li></ul><p>Google AI Studio isn't just a tool—it’s a glimpse into the future, representing the next generation of AI capabilities and putting the power to build intelligent solutions directly into your hands.</p><p>Whether you're looking to revolutionize your industry, create the next viral sensation, or simply explore AI, this is your starting point.</p><p><strong>Ready to witness the dawn of tomorrow’s AI?</strong></p><p>🔥 <strong>Dive into Google AI Studio today and start building the future!</strong> 🔥</p>`,
+            },
+            {
+              author: "Decoding Market Whispers: An Introduction to Technical Analysis",
+              date: "Mar 22, 2025",
+              content: `Financial markets can seem chaotic to beginners, filled with endless numbers and news. However, beneath this apparent randomness lie patterns—subtle whispers of potential future price movements. This is where <strong>technical analysis</strong> comes in: a powerful toolkit for traders navigating market complexities.<br/><h2>What is Technical Analysis?</h2><p>Technical analysis is the study of historical market data, primarily <strong>price and volume</strong>, to identify patterns and predict future trends. Unlike <strong>fundamental analysis</strong>, which evaluates a company's financial health, technical analysis assumes that <strong>all relevant market information is already reflected in price action</strong> and that history tends to repeat itself.</p><h2>Key Concepts and Tools</h2><h3>Charts: Visualizing Market Movements</h3><ul><li><strong>Line Charts</strong> – Connect closing prices to show overall trends.</li><li><strong>Bar Charts</strong> – Display open, high, low, and close prices for each period.</li><li><strong>Candlestick Charts</strong> – Similar to bar charts but visually highlight price range and direction.</li></ul><h3>Trends: Following the Market's Direction</h3><ul><li><strong>Uptrend</strong> – Higher highs and higher lows.</li><li><strong>Downtrend</strong> – Lower highs and lower lows.</li><li><strong>Sideways Trend (Consolidation)</strong> – Price moves within a range.</li></ul><h3>Support and Resistance: Key Price Levels</h3><ul><li><strong>Support</strong> – A price level where buying pressure is strong enough to prevent further declines.</li><li><strong>Resistance</strong> – A price level where selling pressure prevents further increases.</li></ul><h3>Moving Averages: Smoothing Market Noise</h3><ul><li><strong>Simple Moving Average (SMA)</strong> – An average of closing prices over a set period.</li><li><strong>Exponential Moving Average (EMA)</strong> – Gives more weight to recent prices for a faster response.</li></ul><h3>Indicators and Oscillators: Deciphering Market Signals</h3><ul><li><strong>Relative Strength Index (RSI)</strong> – Measures momentum; values above 70 suggest overbought conditions, while below 30 suggests oversold conditions.</li><li><strong>Moving Average Convergence Divergence (MACD)</strong> – Identifies trend changes by analyzing the relationship between two moving averages.</li><li><strong>Bollinger Bands</strong> – Measure volatility and highlight potential breakout opportunities.</li></ul><h3>Chart Patterns: Spotting Market Behavior</h3><ul><li><strong>Head and Shoulders</strong> – A reversal pattern signaling a potential trend change.</li><li><strong>Double Top/Bottom</strong> – Indicates a likely reversal of an existing trend.</li><li><strong>Triangles</strong> – Suggest market consolidation before a breakout.</li></ul><h3>Volume: Understanding Market Strength</h3><p>Volume refers to the number of shares or contracts traded during a period. Higher volume during price movements suggests strong market conviction, while low volume can indicate weakness in the trend.</p><h2>Why Use Technical Analysis?</h2><ul><li><strong>Identify Trends</strong> – Helps traders recognize and capitalize on prevailing market trends.</li><li><strong>Determine Entry and Exit Points</strong> – Provides signals for potential buy and sell opportunities.</li><li><strong>Manage Risk</strong> – Assists in setting stop-loss orders and controlling risk exposure.</li><li><strong>Improve Timing</strong> – Helps traders enter and exit positions at optimal moments.</li></ul><h2>Where to Find Powerful Indicators</h2><p>To enhance your technical analysis toolkit, explore the advanced indicators available at <strong>trade.stimuli.network</strong>. This platform offers sophisticated tools that leverage data-driven insights to help traders make informed decisions. By using cutting-edge algorithms, these indicators provide an <strong>edge in identifying market opportunities</strong>—making them a must-have for serious traders.</p><h2>Final Thoughts: Key Considerations</h2><ul><li><strong>Technical analysis is not foolproof</strong>—market conditions can shift rapidly, and no indicator guarantees profits.</li><li><strong>It works best alongside risk management</strong>—always set stop-loss orders and position sizes accordingly.</li><li><strong>Experience matters</strong>—the more you analyze charts and patterns, the sharper your skills will become.</li></ul><p>Understanding the principles and tools of technical analysis can <strong>empower traders</strong> to navigate the markets with confidence. With practice and the right resources, you can <strong>decode market whispers</strong> and make informed trading decisions.</p>`,
+            },
+            {
+              author: "John Nash on Money: The Quest for an Ideal Currency",
+              date: "Mar 24, 2025",
+              content: `In a thought-provoking lecture, the renowned mathematician and economist John F. Nash Jr. delves into the history, philosophy, and potential future of money, framing it not just as a medium of exchange but as a technology that can be used more or less efficiently. Nash challenges prevailing economic doctrines, particularly those associated with "Keynesian" thought, and explores the concepts of "ideal money" and the emergence of "asymptotically ideal money" through currency competition.<br/><p>Nash begins by observing that despite our dependence on money, we often fail to reason about it objectively, influenced by the desire for more of it or the fear of losing it. He critiques the "quasi-doctrine" propagated by various interests, including "Keynesian" economists, which seemingly suggests that "bad money is better than good money". This notion contrasts with the classical understanding embodied in "Gresham's law," stating that "The bad money drives out the good". Nash argues that this historical perspective on "bad money" stands in opposition to more recent attitudes shaped by Keynesian influence on government policies since the 1930s.</p><p>Reflecting on the philosophy of money, Nash notes the prevalent popular attitudes associating money with negative moral or ethical traits. Despite this, the existence of money facilitates philanthropic donations. He also highlights the Islamic concept of "usury" which prohibits lending money at interest. Nash points out the mundane yet essential role of money in societies with the specialization of labor, where it mediates the exchange of different forms of work. He draws a parallel between the quality of money and public utilities like water or electricity supply.</p><p>Central to Nash's discussion is the concept of "ideal money," envisioned as a stable standard of measurement akin to units like the watt or the hour. This "ideal" form of money would be intrinsically free of inflationary decay, similar to a true gold standard, but based on a linkage to an appropriate index of the prices of internationally traded commodities rather than gold itself. Nash emphasizes that money, as an efficient means of transferring utility, aligns with the game-theoretic concept of "TU games" (games with transferable utility). While the currency of any country can facilitate utility transfer in the short term, the quality of money becomes crucial for contracts with a long time horizon, as rapid and unpredictable inflation erodes the value of money over time, discouraging lending. Despite the benefits of such an ideal system, Nash acknowledges the political difficulties in its implementation, drawing a comparison to the challenges faced by the introduction of the euro.</p><p>Nash then introduces the idea of "asymptotically ideal" money, which emerged from observing the popularity of "inflation targeting" among central banks. He finds it paradoxical that by setting inflation targets, these authorities implicitly confess that inflation can indeed be controlled by managing the money supply. Nash observes that this trend seemed to originate in New Zealand, a country with a significantly depreciated dollar where Keynesian thinking was likely influential. His long-term perspective leads him to argue that the ideal target rate for inflation should be zero, rather than any selected positive rate.</p><p>The practice of "inflation targeting" necessitates the measurement of inflation, typically through a domestic "cost of living" index. Nash posits that if various prominent international currencies are managed using inflation targeting, they become comparable based on their officially recognized inflation rates and their actual exchange values. This comparability allows the public, the users of these currencies, to form critical opinions about their "value quality" and potentially demand better quality, leading to pressure for a lessened rate of inflationary depreciation – hence, "asymptotically ideal money". The Swedish referendum on joining the euro exemplifies the public's ability to make choices based on the perceived quality and future stability of a currency. The historical context of the British pound, once the cornerstone of the gold standard, adds another layer to the discussion of currency choices and national identity.</p><p>Nash critically examines "Keynesian" economics, defining it as a school of thought that emerged during the currency devaluations of the 1930s. He characterizes "Keynesians" as favoring a "manipulative" state establishment that continuously seeks "economic welfare" objectives with less regard for the long-term reputation of the national currency. He highlights Keynes' famous quote, "...in the long run we will all be dead...", suggesting a focus on short-term expediency. Nash draws a parallel between the "lack of transparency" he associates with Keynesian approaches and the governing style of "Bolshevik communists," where decisions are made by authorities assumed to be benevolent but beyond public understanding. He suggests that political evolution may lead to a greater expectation among citizens in democracies to understand monetary policies that significantly affect their financial well-being.</p><p>In conclusion, Nash presents a compelling argument for the pursuit of stable and reliable money, whether through the concept of "ideal money" linked to international commodity prices or through the competitive dynamics arising from publicly scrutinized "inflation targeting." He critiques the influence of "Keynesian" thought on promoting a tolerance for "bad money" and suggests that increasing public awareness and the ability to choose between competing currencies can drive a demand for better monetary quality, leading towards an "asymptotically ideal" state. His lecture encourages a shift in perspective, urging us to view money as a technology that should be rationally managed for long-term stability and value.</p>`,
+            },
+            {
+              author: "Security Through Transparency: Building Resilient Systems by Embracing Openness",
+              date: "Mar 25, 2025",
+              content: `The concept of absolute security in information systems remains unattainable. Despite rigorous efforts to design secure architectures, vulnerabilities persist. Traditional security paradigms often rely on secrecy, known as "security through obscurity," under the assumption that hiding system details enhances protection. However, this approach has been widely criticized for fostering a false sense of security, delaying inevitable attacks rather than preventing them. In contrast, security through transparency advocates for open scrutiny of system designs, promoting resilience through peer review and collaborative vulnerability disclosure.<br/><h2>The Limitations of Security Through Obscurity</h2><p>Security through obscurity operates under the premise that concealing system mechanisms can protect against malicious actors. While this method may offer short-term deterrence, it is not a sustainable security strategy. The primary shortcomings of this approach include:</p><ul><li><strong>False Sense of Security:</strong> Once an attacker uncovers a hidden vulnerability, the entire system becomes susceptible to exploitation.</li><li><strong>Lack of External Review:</strong> Without public examination, undetected vulnerabilities may persist longer than necessary.</li><li><strong>Reduced Trust:</strong> Users and stakeholders may question the integrity of a system that lacks transparency.</li></ul><h2>Security Through Transparency and Its Advantages</h2><p>In contrast to obscurity-based models, security through transparency embraces open design principles, enabling continuous evaluation and improvement. This approach provides several advantages:</p><ul><li><strong>Increased Trust:</strong> Openly communicating security measures fosters confidence among users and stakeholders.</li><li><strong>Collaborative Security Enhancements:</strong> Publicly reviewed systems benefit from contributions by security researchers, ethical hackers, and developers.</li><li><strong>Rapid Vulnerability Remediation:</strong> Transparent processes facilitate faster detection and resolution of security flaws.</li><li><strong>Sustainable System Resilience:</strong> Regular updates and disclosed vulnerabilities allow systems to evolve in response to emerging threats.</li></ul><h2>The Role of Vulnerability Disclosure</h2><p>A critical component of security through transparency is vulnerability disclosure. This structured process involves:</p><ul><li><strong>Encouraging Responsible Reporting:</strong> Security researchers are incentivized to disclose vulnerabilities through bug bounty programs and coordinated disclosure policies.</li><li><strong>Coordinated Remediation Efforts:</strong> Organizations collaborate with researchers to mitigate risks before public disclosure.</li><li><strong>Accountability and Continuous Improvement:</strong> Transparent disclosure mechanisms demonstrate a commitment to security and system integrity.</li></ul><h2>Empirical Evidence Supporting Transparency</h2><p>Empirical studies have consistently demonstrated that open-source and transparent security models outperform closed systems in long-term resilience. Security audits conducted on open-source software have revealed vulnerabilities at an earlier stage compared to proprietary counterparts.</p><p>Security through obscurity and security through transparency differ fundamentally in their approach to protecting systems. Security through obscurity relies on hiding system details to prevent attacks, whereas security through transparency openly shares design and vulnerabilities to encourage scrutiny and improvement. In the short term, obscurity may delay attacks, but transparency enables faster, community-driven fixes by leveraging collective expertise. Over the long run, security through obscurity proves fragile once secrets are exposed, whereas transparent systems continuously evolve through peer review and open collaboration. Additionally, user trust is affected by these approaches. A lack of transparency can create doubt and uncertainty among stakeholders, while an open security model fosters confidence by demonstrating a commitment to accountability and resilience.</p><h2>Future Directions in Transparent Security</h2><p>As cyber threats evolve, the adoption of transparency in security models will likely expand. Future research should focus on refining coordinated vulnerability disclosure processes, enhancing automated security auditing tools, and developing frameworks that balance transparency with proprietary concerns in commercial settings. Expanding bug bounty programs and encouraging academic collaborations may further reinforce the security benefits of open design principles.</p>`,
+            },
+            {
+              author: "Sequence Modeling: The Transformer Approach",
+              date: "Mar 28, 2025",
+              content: `The Transformer, a novel architecture relying solely on attention, has revolutionized sequence modeling by replacing RNNs and CNNs. This shift enables significant parallelization and achieves state-of-the-art results.<p>For years, recurrent neural networks (RNNs) like LSTMs and GRUs dominated sequence modeling tasks. Their sequential processing, however, limited parallelization, especially with long sequences. The Transformer departs radically, using self-attention to compute representations without recurrent or convolutional layers. This parallel nature significantly reduces training time.</p><p>Key aspects include:</p><ul><li><strong>Self-Attention:</strong> Each position in a sequence attends to all others, capturing dependencies.</li><li><strong>Multi-Head Attention:</strong> Multiple attention mechanisms run in parallel, capturing diverse relationships.</li><li><strong>Scaled Dot-Product Attention:</strong> Attention weights are computed with scaling for training stability.</li><li><strong>Encoder-Decoder Structure:</strong> Stacked layers with self-attention and feed-forward networks, and masking in the decoder to maintain autoregressive properties.</li><li><strong>Position-wise Feed-Forward Networks:</strong> Linear transformations with ReLU activation applied to each position.</li><li><strong>Positional Encoding:</strong> Added to input embeddings to provide sequence order information.</li></ul><p>The Transformer achieved state-of-the-art results in machine translation, outperforming previous models on WMT 2014 English-to-German and English-to-French tasks with reduced training time. It also excels in English constituency parsing, demonstrating its generalizability. Attention visualizations reveal the model's interpretability, showing how different heads capture linguistic phenomena.</p><p>The Transformer's reliance on attention has fundamentally advanced sequence modeling, enabling significant parallelization and achieving state-of-the-art results across diverse tasks. Its impact positions it as a cornerstone for future research. The code used for the experiments is publicly available: https://github.com/hyunwoongko/transformer.</p>`,
+            },
+            {
+                author: "The Promise and Peril of Decentralization: A Nuanced Look at Freedom of Speech",
+                date: "Mar 29, 2025",
+                content: `
+                    The buzz around decentralization, especially with blockchain tech, often comes with big hopes for better freedom of speech. The idea that un-censorable platforms can protect our ability to speak our minds without fear of being shut down is pretty exciting. This post explores the connection between decentralization and free speech, looking at what platforms like BTFS (BitTorrent File System) offer, while also being real about the challenges and ethics involved. We're aiming for a balanced view, focusing on learning and understanding.
+                
+                    <h2>Decentralization: A Foundation for Untouchable Expression?</h2>
+                
+                    <p>Basically, decentralization is about spreading control away from one central place to a network of people. For storing and sharing content, things like BTFS, IPFS (InterPlanetary File System), and others want to replace traditional servers with a network of nodes that all share the load.</p>
+                
+                    <p>Here's how decentralization is seen as helping freedom of speech:</p>
+                    <ul>
+                        <li><strong>No More Censorship:</strong> Content is spread everywhere, making it super hard for anyone to censor or remove it.</li>
+                        <li><strong>Permanent Records:</strong> Blockchain makes things immutable, preventing content from being altered or deleted.</li>
+                        <li><strong>Cutting Out the Middleman:</strong> Users can directly publish and share content without relying on centralized platforms.</li>
+                        <li><strong>Better Privacy:</strong> Encryption allows people to share controversial opinions without fear of being watched.</li>
+                    </ul>
+                
+                    <h2>BTFS and Similar Protocols: How They Work</h2>
+                
+                    <p>BTFS uses the BitTorrent protocol and a blockchain-based reward system, incentivizing users to provide storage and bandwidth. Similarly, IPFS uses content addressing, identifying data by cryptographic hash instead of a fixed location.</p>
+                
+                    <p>Key features that affect free speech:</p>
+                    <ul>
+                        <li><strong>Distributed Storage:</strong> Data is split into small pieces and stored across many nodes, making censorship difficult.</li>
+                        <li><strong>Content Addressing:</strong> Hash-based identification ensures content is resistant to tampering.</li>
+                        <li><strong>Incentive Mechanisms:</strong> Users are rewarded for participation, maintaining the ecosystem.</li>
+                    </ul>
+                
+                    <h2>The Complexities and Challenges: A Critical Look</h2>
+                
+                    <p>While decentralization offers great potential, it comes with challenges:</p>
+                    <ul>
+                        <li><strong>The Double-Edged Sword of Free Speech:</strong> Without moderation, harmful content can spread.</li>
+                        <li><strong>Illegal Content:</strong> Decentralized platforms can be misused for illegal material.</li>
+                        <li><strong>Scalability and Performance:</strong> Storing and serving content across a decentralized network can be slower and more expensive.</li>
+                        <li><strong>Content Moderation Problem:</strong> Without central control, addressing harmful content is difficult.</li>
+                        <li><strong>Spam and Sybil Attacks:</strong> Malicious actors can create fake identities to manipulate the system.</li>
+                        <li><strong>Legal Questions:</strong> Determining responsibility for decentralized content remains unclear.</li>
+                        <li><strong>Misinformation and Disinformation:</strong> Decentralized systems make it harder to verify information sources.</li>
+                    </ul>
+                
+                    <h2>Towards a Responsible Decentralized Future: Balancing Freedom and Responsibility</h2>
+                
+                    <p>Ensuring a balance between free speech and responsible governance requires:</p>
+                    <ul>
+                        <li><strong>Community-Based Governance:</strong> Allowing users to help set platform rules.</li>
+                        <li><strong>Reputation Systems:</strong> Enabling user ratings to filter out harmful content.</li>
+                        <li><strong>Algorithmic Filtering:</strong> Implementing transparent and unbiased content moderation algorithms.</li>
+                        <li><strong>Legal Frameworks:</strong> Defining responsibility in decentralized networks.</li>
+                        <li><strong>Education and Awareness:</strong> Teaching users about risks and responsibilities.</li>
+                        <li><strong>Opt-in Content Filtering:</strong> Letting users choose their content moderation preferences.</li>
+                        <li><strong>Decentralized Identity Solutions:</strong> Balancing accountability with privacy.</li>
+                    </ul>
+                
+                    <h2>Conclusion: Navigating the Decentralized Frontier with Caution and Optimism</h2>
+                
+                    <p>Decentralization has the potential to improve free speech, but also introduces risks. The key is balancing freedom of expression with necessary safeguards. Community governance, content moderation, legal frameworks, and user education will be essential in shaping the future of decentralized platforms.</p>
+                
+                    <p>By being responsible, we can build a more open, fair, and secure information system while avoiding potential dangers. Promoting dialogue and inclusivity will help ensure decentralization enhances society without compromising safety and trust.</p>`
+            }
+          ];
+
+        let headerTimeout;
+        const postsPerPage = 5;
+        let currentPage = 1;
+
+        function renderPosts() {
+            postsContainer.innerHTML = '';
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const reversedPosts = allPosts.slice().reverse();
+            const currentPostsData = reversedPosts.slice(startIndex, endIndex);
+
+            currentPostsData.forEach((post, index) => {
+                const originalReversedIndex = startIndex + index;
+                const postElement = createPostElement(post, originalReversedIndex);
+                postsContainer.appendChild(postElement);
+            });
+            renderPagination();
+        }
+
+        function createPostElement(post, originalReversedIndex) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            postDiv.dataset.postIndex = originalReversedIndex;
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'post-header';
+
+            const authorSpan = document.createElement('span');
+            authorSpan.className = 'post-author';
+            authorSpan.innerHTML = `<img src="images/92110733.jpeg" alt="Adrian Mowrey" style="border-radius: 50%;"> Adrian`;
+
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'post-date';
+            dateSpan.textContent = post.date;
+
+            headerDiv.appendChild(authorSpan);
+            headerDiv.appendChild(dateSpan);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'post-content';
+            contentDiv.innerHTML = post.content;
+
+            const readMoreLink = document.createElement('span');
+            readMoreLink.className = 'read-more';
+            readMoreLink.textContent = '';
+            readMoreLink.addEventListener('click', (event) => {
+                event.stopPropagation();
+                 const postElement = event.target.closest('.post');
+                 if(postElement && postElement.dataset.postIndex !== undefined) {
+                     const idx = parseInt(postElement.dataset.postIndex, 10);
+                     const originalIndex = allPosts.length - 1 - idx;
+                     if (!isNaN(originalIndex) && allPosts[originalIndex]) {
+                         openModal(allPosts[originalIndex]);
+                     }
+                 }
+            });
+            if (post.content.length > 100) {
+                 contentDiv.appendChild(readMoreLink);
+            }
+
+            postDiv.appendChild(headerDiv);
+            postDiv.appendChild(contentDiv);
+
+            return postDiv;
+        }
+
+        function openModal(post) {
+             modalContent.innerHTML = `
+                <h2>${post.author}</h2>
+                <p class="post-date">${post.date}</p>
+                <div>${post.content}</div>
+            `;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+            modalContent.innerHTML = '';
+        }
+
+        function switchSection(sectionId) {
+            sections.forEach(section => {
+                section.classList.toggle('active', section.id === sectionId);
+            });
+
+            if (sectionId === 'posts') {
+                currentPage = 1;
+                renderPosts();
+            }
+        }
+
+        function renderPagination() {
+            postsPagination.innerHTML = '';
+            const totalPages = Math.ceil(allPosts.length / postsPerPage);
+
+            if (totalPages <= 1) {
+                 return;
+            }
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentPage === 1;
+            prevButton.dataset.action = 'prev';
+            postsPagination.appendChild(prevButton);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.dataset.page = i;
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                postsPagination.appendChild(pageButton);
+            }
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.dataset.action = 'next';
+            postsPagination.appendChild(nextButton);
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                switchSection(targetId);
+            });
+        });
+
+        postsContainer.addEventListener('click', (event) => {
+            const postElement = event.target.closest('.post');
+            if (postElement && !event.target.classList.contains('read-more') && postElement.dataset.postIndex !== undefined) {
+                 const originalReversedIndex = parseInt(postElement.dataset.postIndex, 10);
+                 const originalIndex = allPosts.length - 1 - originalReversedIndex;
+                 if (!isNaN(originalIndex) && allPosts[originalIndex]) {
+                    openModal(allPosts[originalIndex]);
+                } else {
+                     console.error("Could not find post data for index:", originalReversedIndex);
+                }
+            }
+        });
+
+        postsPagination.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (!button || button.disabled) return;
+
+            const action = button.dataset.action;
+            const page = button.dataset.page;
+            const totalPages = Math.ceil(allPosts.length / postsPerPage);
+
+            let needsRender = false;
+
+            if (action === 'prev' && currentPage > 1) {
+                currentPage--;
+                needsRender = true;
+            } else if (action === 'next' && currentPage < totalPages) {
+                currentPage++;
+                needsRender = true;
+            } else if (page) {
+                const pageNum = parseInt(page, 10);
+                if (pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    needsRender = true;
+                }
+            }
+
+            if (needsRender) {
+                renderPosts();
+            }
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        headerTimeout = setTimeout(() => {
+            stimuliHeader.classList.add('show');
+            setTimeout(()=> {
+                synapseHeader.textContent = '..a unified perception framework';
+            }, 2500);
+        }, 500);
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        const playlistId = 'PLeCgVGg_14CEJ0T-0hZCr8w1zpe2doTMi';
+
+        function onYouTubeIframeAPIReady() {
+            try {
+                player = new YT.Player('player', {
+                    height: '1', width: '1',
+                    playerVars: { listType: 'playlist', list: playlistId, autoplay: 1, mute: 1, controls: 0, showinfo: 0, modestbranding: 1, loop: 0, iv_load_policy: 3, playsinline: 1 },
+                    events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange, 'onError': onPlayerError }
+                });
+            } catch (e) {
+                console.error("Error creating YouTube player:", e);
+                const musicPopup = document.getElementById('music-popup');
+                if (musicPopup) musicPopup.style.display = 'none';
+            }
+        }
+        function onPlayerReady(event) {
+            try {
+                event.target.mute();
+                event.target.setShuffle(true);
+                event.target.setLoop(true);
+                event.target.playVideoAt(0);
+                setTimeout(() => {
+                     const musicPopup = document.getElementById('music-popup');
+                     if (musicPopup) musicPopup.style.display = 'flex';
+                }, 500);
+            } catch (e) {
+                console.error("Error during onPlayerReady:", e);
+                const musicPopup = document.getElementById('music-popup');
+                if (musicPopup) musicPopup.style.display = 'none';
+            }
+        }
+        function onPlayerStateChange(event) { }
+        function onPlayerError(event) { console.error("YouTube Player Error:", event.data); const musicPopup = document.getElementById('music-popup'); if (musicPopup) musicPopup.style.display = 'none'; }
+        function startMusic() { const musicPopup = document.getElementById('music-popup'); if (player && typeof player.unMute === 'function') { try { player.unMute(); console.log("Music started (unmuted)"); if (musicPopup) musicPopup.style.display = 'none'; } catch (e) { console.error("Error unmuting player:", e); if (musicPopup) musicPopup.style.display = 'none'; } } else { console.warn("Player not ready or unMute function unavailable."); if (musicPopup) musicPopup.style.display = 'none'; } }
+        function stopMusic() { const musicPopup = document.getElementById('music-popup'); if (musicPopup) musicPopup.style.display = 'none'; if (player && typeof player.mute === 'function') { try { player.mute(); console.log("Music choice 'No' (muted)"); } catch (e) { console.error("Error muting player:", e); } } else { console.warn("Player not ready or mute function unavailable."); } }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const homeLink = document.querySelector('header nav ul li a[href="#about"]');
+            if (homeLink && homeLink.parentNode) {
+                 homeLink.parentNode.remove();
+            }
+            switchSection('posts');
+        });
+
+    </script>
+</body>
+</html>
