@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimuli Network</title>
+
+    <!-- Preconnect hints for faster YouTube connection -->
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://s.ytimg.com" crossorigin>
+
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <!-- YouTube Player Placeholder -->
+    <div id="player"></div>
+
+    <!-- Header Section -->
+    <header>
+        <h1 class="hidden" id="stimuli-header">Stimuli Network</h1>
+        <h2 id="synapse-header">..empowering innovation through</h2>
+        <h3 id="stimuli-station-header">Stimuli Station</h3>
+
+        <!-- YouTube Symbol Player Controls -->
+        <div id="youtube-controls">
+            <button id="yt-prev-btn" title="Previous Track">⏮</button>
+            <button id="yt-play-btn" title="Play">▶</button>
+            <button id="yt-next-btn" title="Next Track">⏭</button>
+        </div>
+
+        <!-- Playlist Status Display -->
+        <p id="playlist-status"></p>
+
+        <!-- Navigation -->
+        <nav>
+            <ul>
+                <li><a href="#posts">Posts</a></li>
+                <li><a href="#resume">Résumé</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <section id="posts" class="active">
+            <div class="container">
+                <h2>Posts</h2>
+                <div id="posts-container"><!-- Posts loaded via JS --></div>
+                <div class="pagination" id="posts-pagination"><!-- Pagination loaded via JS --></div>
+            </div>
+        </section>
+        <section id="resume">
+             <div class="container">
+                 <img src="images/0045.jpg" alt="Adrian Mowrey" style="width: 150px; height: 175px; border-radius: 50%; margin-bottom: 5px;">
+                 <h1>Adrian Mowrey</h1>
+                 <p>Possesses a strong background in software engineering, cybersecurity, and technical analysis, complemented by hands-on experience managing projects and working with new technologies. Passionate about teaching and aims to use this varied experience to help students get started in computer science and cybersecurity.</p>
+                 <h3>Education</h3>
+                 <p>Studies in Computer Science and Cybersecurity across several institutions have provided a solid understanding of both the theory and the practical side of these fields. This broad experience enables effective breakdown of complex topics and student mentorship.</p><br />
+                 <ul>
+                     <li>Colorado State University Global</li>
+                     <li>Kennesaw State University</li>
+                     <li>Minot State University</li>
+                     <li>Minnesota State University Moorhead</li>
+                     <li>Dakota State University</li>
+                     <li>Bemidji State University</li>
+                     <li>Dallas Baptist University</li>
+                     <li>Central Georgia Technical College</li>
+                 </ul>
+                 <h3>Experience</h3>
+                 <ul><li><strong>Fun Spot Manufacturing LLC, Project Manager (2024-2025)</strong><ul><li>Spearheaded project development, leveraging AI for automation and creating advanced spreadsheet solutions to optimize nationwide trampoline park operations.</li><li>Directed nationwide project execution, including business travel and providing critical on-site support across various locations.</li></ul></li><li><strong>Bemidji State University, IT Specialist (Student Worker) (2017)</strong><ul><li>Delivered comprehensive technical support and troubleshooting assistance to students and university staff, ensuring smooth operation of IT resources.</li></ul></li><li><strong>Triumph Aerostructures-Vought Aircraft Division (2007-2014)</strong><ul><li>Played integral roles across multiple manufacturing functions, including precision CNC machining (calibration, probing, milling, drilling) and vital engineering support.</li><li>Contributed significantly to final assembly and paint shop operations for complex aerospace components, ensuring quality and adherence to specifications.</li><li>Entrusted with training responsibilities and implementing system changes within dynamic production environments.</li><li>Selected as a contractor (via Vought Aircraft Industries Inc.) to support critical engineering revisions for the high-profile Boeing 787-8 Dreamliner program at Boeing Inc. in Everett, WA.</li></ul></li></ul>
+                 <h3>Skills</h3>
+                 <ul>
+                     <li>Artificial Intelligence & Automation</li>
+                     <li>Full-Stack Web Development</li>
+                     <li>Project Management & Execution</li>
+                     <li>Technical Analysis & Trading</li>
+                 </ul>
+                 <h3>Awards and Recognition</h3><ul><li>Certified Software Developer, LINK Academy (2013)</li><li>Imagine Cup, Software Design Semi-Finalist (2009)</li><li>President's List of Outstanding Students, C.G.T.C. (2009)</li><li>Certified in Financial and Commercial Activities (2004)</li></ul>
+             </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Stimuli Network. All rights reserved.</p>
+    </footer>
+
+    <!-- Post Modal -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <button id="closeModal" class="close-button">×</button>
+            <div id="modalPostContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- START: Global Variables & DOM References ---
+        const navLinks = document.querySelectorAll('header nav ul li a');
+        const sections = document.querySelectorAll('main > section');
+        const postsContainer = document.getElementById('posts-container');
+        const stimuliHeader = document.getElementById('stimuli-header');
+        const synapseHeader = document.getElementById('synapse-header');
+        const stationHeader = document.getElementById('stimuli-station-header');
+        const modal = document.getElementById('postModal');
+        const modalContent = document.getElementById('modalPostContent');
+        const closeModalBtn = document.getElementById('closeModal');
+        const postsPagination = document.getElementById('posts-pagination');
+        const playlistStatusElement = document.getElementById('playlist-status');
+        const adrianAvatar = "images/92110733.jpeg"; // Ensure this path is correct
+
+        let allPosts = []; // Will hold the NEWEST-TO-OLDEST sorted posts
+        let headerTimeout;
+        const postsPerPage = 5;
+        let currentPage = 1;
+
+        var player;
+
+        // --- START: Playlist Configuration ---
+        const availablePlaylists = [
+            { id: 'PLeCgVGg_14CEJ0T-0hZCr8w1zpe2doTMi', name: "Space" }, // Playlist 1
+            { id: 'PLeCgVGg_14CGVQO_8Ij8fxQFFzbVN2RRF', name: "Tech" }   // Playlist 2
+        ];
+        let selectedPlaylistId = null;
+        let selectedPlaylistIndex = -1; // 0-based index
+        // --- END: Playlist Configuration ---
+
+        const ytControlsContainer = document.getElementById('youtube-controls');
+        const ytPlayBtn = document.getElementById('yt-play-btn');
+        const ytNextBtn = document.getElementById('yt-next-btn');
+        const ytPrevBtn = document.getElementById('yt-prev-btn');
+
+        // --- START: Retry Logic Variables ---
+        let retryAttemptCount = 0;
+        const MAX_RETRY_ATTEMPTS = availablePlaylists.length > 1 ? availablePlaylists.length : 1;
+        const RETRY_DELAY_MS = 2500;
+        // --- END: Retry Logic Variables ---
+
+        // --- END: Global Variables & DOM References ---
+
+        // --- START: Helper Functions ---
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        // --- END: Helper Functions ---
+
+        // --- START: Post Rendering & Modal Logic ---
+
+        // Renders posts from the pre-sorted (newest-to-oldest) allPosts array
+        function renderPosts() {
+            if (!postsContainer) return;
+            postsContainer.innerHTML = '';
+            const startIndex = (currentPage - 1) * postsPerPage;
+            // Slice directly from the pre-sorted allPosts array
+            const currentPostsData = allPosts.slice(startIndex, startIndex + postsPerPage);
+
+            currentPostsData.forEach((post, index) => {
+                // Calculate the index within the sorted allPosts array
+                const postIndexInSortedArray = startIndex + index;
+                const postElement = createPostElement(post, postIndexInSortedArray);
+                postsContainer.appendChild(postElement);
+            });
+            renderPagination();
+        }
+
+        // Creates a post element and stores its index in the sorted array
+        function createPostElement(post, postIndexInSortedArray) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            // Store the index within the sorted allPosts array
+            postDiv.dataset.index = postIndexInSortedArray;
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'post-header';
+            const authorSpan = document.createElement('span');
+            authorSpan.className = 'post-author';
+            authorSpan.innerHTML = `<img src="${adrianAvatar}" alt="Adrian Mowrey"> Adrian`;
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'post-date';
+            // Format the date for display
+            try {
+                const dateObj = new Date(post.date);
+                if (!isNaN(dateObj)) { // Check if date is valid
+                     dateSpan.textContent = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                } else {
+                     dateSpan.textContent = post.date || 'No Date'; // Fallback
+                }
+            } catch (e) {
+                 dateSpan.textContent = post.date || 'No Date'; // Fallback on error
+            }
+
+            let commentIndicatorHTML = '';
+            if (post.comments && Array.isArray(post.comments) && post.comments.length > 0) {
+                commentIndicatorHTML = `<span class="post-comment-indicator" title="${post.comments.length} replies in thread">💬 ${post.comments.length}</span>`;
+            }
+            headerDiv.appendChild(authorSpan);
+            headerDiv.appendChild(dateSpan);
+            headerDiv.insertAdjacentHTML('beforeend', commentIndicatorHTML);
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'post-content';
+            contentDiv.innerHTML = post.content || ''; // Use innerHTML
+            postDiv.appendChild(headerDiv);
+            postDiv.appendChild(contentDiv);
+
+            // Click listener uses the stored index to open the correct modal
+            postDiv.addEventListener('click', (event) => {
+                const postElement = event.currentTarget;
+                if (postElement && postElement.dataset.index !== undefined) {
+                    const idx = parseInt(postElement.dataset.index, 10);
+                    if (!isNaN(idx) && allPosts && allPosts[idx]) {
+                        // Use the index directly on the sorted allPosts array
+                        openModal(allPosts[idx]);
+                    } else {
+                        console.error("Could not find post data for index:", idx, "allPosts:", allPosts);
+                    }
+                }
+            });
+            return postDiv;
+        }
+
+        // Opens the modal with post details
+        function openModal(post) {
+            if (!modalContent || !modal) return;
+            modalContent.innerHTML = ''; // Clear previous content
+            let commentsHTML = '';
+            const postTitle = post.author ? `<h2 class="modal-post-title">${post.author}</h2>` : '<h2 class="modal-post-title">[No Title]</h2>';
+
+             // Format date in modal
+             let displayDate = 'Unknown Date';
+             try {
+                 const dateObj = new Date(post.date);
+                 if (!isNaN(dateObj)) {
+                      displayDate = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                 } else if (post.date) {
+                      displayDate = post.date; // Fallback to original string if invalid
+                 }
+             } catch(e) {
+                 if (post.date) displayDate = post.date; // Fallback on error
+             }
+
+
+            if (post.comments && Array.isArray(post.comments) && post.comments.length > 0) {
+                commentsHTML = '<div class="modal-comments-section"><h3 class="comments-heading">Thread</h3><ul class="comments-list">';
+                post.comments.forEach(comment => {
+                    const user = comment.user || 'Adrian';
+                    const avatar = comment.avatar || adrianAvatar;
+                    let commentDate = 'Unknown Date';
+                     try { // Format comment date
+                         const cDateObj = new Date(comment.date);
+                         if (!isNaN(cDateObj)) {
+                              commentDate = cDateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                         } else if (comment.date) {
+                             commentDate = comment.date;
+                         }
+                     } catch(e){
+                          if (comment.date) commentDate = comment.date;
+                     }
+
+                    const text = comment.text || '[No text]';
+                    commentsHTML += `<li class="comment-item"><div class="comment-author-info"><img src="${avatar}" alt="${user}" class="comment-avatar"><div class="comment-meta"><span class="comment-author">${user}</span><span class="comment-date">${commentDate}</span></div></div><div class="comment-text">${text}</div></li>`;
+                });
+                commentsHTML += '</ul></div>';
+            }
+            // Construct modal content
+            modalContent.innerHTML = `
+                <div class="modal-post-author-info">
+                    <img src="${adrianAvatar}" alt="Adrian Mowrey" class="modal-author-avatar">
+                    <div>
+                        <span class="modal-author-name">Adrian</span>
+                        <span class="modal-post-date">${displayDate}</span>
+                    </div>
+                </div>
+                ${postTitle}
+                <div class="modal-post-main-content">${post.content || '[No Content]'}</div>
+                ${commentsHTML}`;
+
+            modal.classList.add('show'); // Display the modal
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            modal.scrollTop = 0; // Scroll modal itself to top
+            modalContent.scrollTop = 0; // Scroll modal content to top
+        }
+
+        // Closes the modal
+        function closeModal() {
+            if (modal) modal.classList.remove('show');
+            document.body.style.overflow = ''; // Restore background scrolling
+            if (modalContent) modalContent.innerHTML = ''; // Clear modal content
+        }
+
+        // Switches between main content sections (Posts/Résumé)
+        function switchSection(sectionId) {
+            sections.forEach(section => section.classList.toggle('active', section.id === sectionId));
+            navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`));
+            // If switching to posts, reset to page 1 and render
+            if (sectionId === 'posts' && allPosts.length > 0) {
+                currentPage = 1;
+                renderPosts();
+            }
+        }
+
+        // Renders pagination controls
+        function renderPagination() {
+            if (!postsPagination) return;
+            postsPagination.innerHTML = '';
+            const totalPages = allPosts.length > 0 ? Math.ceil(allPosts.length / postsPerPage) : 0;
+            if (totalPages <= 1) return; // No pagination needed for 0 or 1 page
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentPage === 1;
+            prevButton.dataset.action = 'prev';
+            postsPagination.appendChild(prevButton);
+
+            // Complex pagination number display logic (ellipsis, etc.)
+            const maxPagesToShow = 5;
+            let startPage, endPage;
+            if (totalPages <= maxPagesToShow) {
+                startPage = 1; endPage = totalPages;
+            } else {
+                const maxPagesBeforeCurrent = Math.floor(maxPagesToShow / 2);
+                const maxPagesAfterCurrent = Math.ceil(maxPagesToShow / 2) - 1;
+                if (currentPage <= maxPagesBeforeCurrent) {
+                    startPage = 1; endPage = maxPagesToShow;
+                } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+                    startPage = totalPages - maxPagesToShow + 1; endPage = totalPages;
+                } else {
+                    startPage = currentPage - maxPagesBeforeCurrent; endPage = currentPage + maxPagesAfterCurrent;
+                }
+            }
+            if (startPage > 1) {
+                const firstButton = document.createElement('button'); firstButton.textContent = '1'; firstButton.dataset.page = 1; postsPagination.appendChild(firstButton);
+                if (startPage > 2) { const ellipsis = document.createElement('span'); ellipsis.textContent = '...'; ellipsis.style.margin = '0 5px'; ellipsis.style.alignSelf = 'center'; postsPagination.appendChild(ellipsis); }
+            }
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button'); pageButton.textContent = i; pageButton.dataset.page = i; if (i === currentPage) { pageButton.classList.add('active'); } postsPagination.appendChild(pageButton);
+            }
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) { const ellipsis = document.createElement('span'); ellipsis.textContent = '...'; ellipsis.style.margin = '0 5px'; ellipsis.style.alignSelf = 'center'; postsPagination.appendChild(ellipsis); }
+                const lastButton = document.createElement('button'); lastButton.textContent = totalPages; lastButton.dataset.page = totalPages; postsPagination.appendChild(lastButton);
+            }
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.dataset.action = 'next';
+            postsPagination.appendChild(nextButton);
+        }
+        // --- END: Post Rendering & Modal Logic ---
+
+
+        // --- START: YouTube Player Integration ---
+        // (Code is unchanged from previous version - functions for status display,
+        // playlist retry, API ready, state change, error handling, controls, etc.)
+        function resetStatusStyle() { if (playlistStatusElement) { playlistStatusElement.style.color = '#888'; } }
+        function showLoadingStatus() { resetStatusStyle(); if (playlistStatusElement) { playlistStatusElement.textContent = 'Loading...'; playlistStatusElement.classList.add('show'); } }
+        function showErrorStatus(message = 'Player Error') { console.error("Player Error Status:", message); if (playlistStatusElement) { playlistStatusElement.textContent = message; playlistStatusElement.style.color = '#ff5555'; playlistStatusElement.classList.add('show'); } }
+        function hideStatus() { resetStatusStyle(); if (playlistStatusElement) { playlistStatusElement.textContent = ''; playlistStatusElement.classList.remove('show'); } }
+        function updateTrackStatus() { resetStatusStyle(); if (playlistStatusElement && player && typeof player.getPlaylistIndex === 'function' && typeof player.getPlaylist === 'function' && selectedPlaylistIndex >= 0 && selectedPlaylistIndex < availablePlaylists.length) { let currentIndex = -1; let playlist = null; let totalVideosInCurrentList = 0; try { currentIndex = player.getPlaylistIndex(); playlist = player.getPlaylist(); totalVideosInCurrentList = (playlist && Array.isArray(playlist)) ? playlist.length : 0; if (totalVideosInCurrentList > 0 && currentIndex >= 0) { let displayIndex = currentIndex + 1; if (displayIndex > totalVideosInCurrentList) { displayIndex = totalVideosInCurrentList; } const playlistName = availablePlaylists[selectedPlaylistIndex]?.name || `Playlist ${selectedPlaylistIndex + 1}`; const newStatusText = `[${playlistName}] ${displayIndex} of ${totalVideosInCurrentList}`; if (playlistStatusElement.textContent !== newStatusText || !playlistStatusElement.classList.contains('show')) { console.log(`Updating status display: ${newStatusText}`); playlistStatusElement.textContent = newStatusText; playlistStatusElement.classList.add('show'); } } else { hideStatus(); } } catch (e) { console.error("Error during updateTrackStatus execution:", e); hideStatus(); } } else if (playlistStatusElement) { hideStatus(); } }
+        function attemptDifferentPlaylistLoad() { if (!player) { console.error("Cannot retry, player not ready."); disablePlayerControls(); return; } const currentFailedIndex = selectedPlaylistIndex; let nextTryIndex = currentFailedIndex; let attempts = 0; while (nextTryIndex === currentFailedIndex && attempts < availablePlaylists.length * 2) { nextTryIndex = getRandomInt(0, availablePlaylists.length - 1); attempts++; } if (nextTryIndex === currentFailedIndex) { console.error("Failed to switch to a different playlist for retry."); showErrorStatus("Playlist(s) restricted"); enablePlayerControls(); return; } selectedPlaylistIndex = nextTryIndex; selectedPlaylistId = availablePlaylists[selectedPlaylistIndex].id; console.log(`Retry attempt #${retryAttemptCount}: Trying Playlist Index ${selectedPlaylistIndex}, ID: ${selectedPlaylistId}, Name: ${availablePlaylists[selectedPlaylistIndex].name}`); showLoadingStatus(); try { if (typeof player.unMute === 'function') player.unMute(); player.loadPlaylist({ list: selectedPlaylistId, listType: 'playlist', index: 0 }); } catch (e) { console.error("Error initiating playlist load during retry:", e); showErrorStatus("Retry failed"); enablePlayerControls(); } }
+        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        function onYouTubeIframeAPIReady() { try { selectedPlaylistIndex = getRandomInt(0, availablePlaylists.length - 1); selectedPlaylistId = availablePlaylists[selectedPlaylistIndex].id; console.log(`YT API Ready. Selected Initial Playlist Index: ${selectedPlaylistIndex}, ID: ${selectedPlaylistId}, Name: ${availablePlaylists[selectedPlaylistIndex].name}`); player = new YT.Player('player', { height: '1', width: '1', playerVars: { listType: 'playlist', list: selectedPlaylistId, autoplay: 0, mute: 1, controls: 0, showinfo: 0, modestbranding: 1, loop: 1, iv_load_policy: 3, playsinline: 1 }, events: { 'onReady': onPlayerReady, 'onStateChange': onStateChange, 'onError': onPlayerError } }); } catch (e) { console.error("Error creating YouTube player:", e); disablePlayerControls(); showErrorStatus("Player creation failed"); } }
+        function onPlayerReady(event) { console.log("Player instance Ready."); try { event.target.mute(); retryAttemptCount = 0; console.log("Enabling controls for initial load."); enablePlayerControls(); hideStatus(); } catch (e) { console.error("Error during onPlayerReady:", e); disablePlayerControls(); showErrorStatus("Player ready error"); } }
+        function onStateChange(event) { const playerState = event.data; console.log("Player State Change:", playerState, `(Retry count: ${retryAttemptCount})`, YT.PlayerState); switch (playerState) { case YT.PlayerState.PLAYING: if (retryAttemptCount > 0) { console.log("Playback started successfully after retry."); retryAttemptCount = 0; } enablePlayerControls(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '❚❚'; ytPlayBtn.title = 'Pause'; } updateTrackStatus(); break; case YT.PlayerState.BUFFERING: showLoadingStatus(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } break; case YT.PlayerState.CUED: if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } if (retryAttemptCount > 0) { console.log("CUED state reached after successful retry load."); retryAttemptCount = 0; enablePlayerControls(); updateTrackStatus(); console.log("Track status updated after successful retry."); } else { console.log("CUED during normal operation."); enablePlayerControls(); updateTrackStatus(); } break; case YT.PlayerState.PAUSED: enablePlayerControls(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } updateTrackStatus(); break; case YT.PlayerState.ENDED: enablePlayerControls(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } updateTrackStatus(); break; case YT.PlayerState.UNSTARTED: enablePlayerControls(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } hideStatus(); break; default: enablePlayerControls(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } hideStatus(); break; } }
+        function onPlayerError(event) { const errorCode = event.data; const currentPlaylistName = (selectedPlaylistIndex >= 0 && selectedPlaylistIndex < availablePlaylists.length) ? availablePlaylists[selectedPlaylistIndex].name : 'Unknown'; console.error(`YouTube Player Error: Code ${errorCode}. Playlist Index: ${selectedPlaylistIndex}, ID: ${selectedPlaylistId}, Name: ${currentPlaylistName}, Retry Count Before This Error: ${retryAttemptCount}`); if ((errorCode === 101 || errorCode === 150) && retryAttemptCount < MAX_RETRY_ATTEMPTS) { retryAttemptCount++; console.log(`Playback disabled error (${errorCode}). Initiating retry attempt ${retryAttemptCount} of ${MAX_RETRY_ATTEMPTS}.`); disablePlayerControls(); showLoadingStatus(); setTimeout(attemptDifferentPlaylistLoad, RETRY_DELAY_MS); return; } let errorMsg = `Error (${errorCode})`; if (errorCode === 2) errorMsg = "Invalid Video/Playlist ID"; else if (errorCode === 5) errorMsg = "Playback Error (HTML5)"; else if (errorCode === 100) errorMsg = "Video Not Found"; else if (errorCode === 101 || errorCode === 150) { errorMsg = "Playback Disabled"; console.error(`Max retries (${MAX_RETRY_ATTEMPTS}) reached for error ${errorCode}.`); } else { console.error("Unhandled or non-retryable error code encountered."); } showErrorStatus(errorMsg); retryAttemptCount = 0; enablePlayerControls(); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } }
+        function disablePlayerControls() { if (ytControlsContainer && !ytControlsContainer.classList.contains('disabled')) { console.warn("Disabling player controls."); ytControlsContainer.classList.add('disabled'); if(ytPlayBtn) { ytPlayBtn.innerHTML = '▶'; ytPlayBtn.title = 'Play'; } } }
+        function enablePlayerControls() { if (ytControlsContainer && ytControlsContainer.classList.contains('disabled')) { console.log("Enabling player controls."); ytControlsContainer.classList.remove('disabled'); } else if (!ytControlsContainer) { console.warn("Could not find ytControlsContainer to enable/disable.") } }
+        if (ytPlayBtn) { ytPlayBtn.addEventListener('click', () => { if (!player || typeof player.getPlayerState !== 'function') return; if (ytControlsContainer && ytControlsContainer.classList.contains('disabled')) return; try { const state = player.getPlayerState(); if (state === YT.PlayerState.PLAYING) { player.pauseVideo(); } else { showLoadingStatus(); if (typeof player.unMute === 'function') player.unMute(); player.playVideo(); } } catch (e) { console.error("Play/pause click error:", e); showErrorStatus("Control Error"); updateTrackStatus(); } }); }
+        if (ytPrevBtn) { ytPrevBtn.addEventListener('click', () => { if (!player || typeof player.getPlaylistIndex !== 'function' || typeof player.getPlaylist !== 'function') return; if (ytControlsContainer && ytControlsContainer.classList.contains('disabled')) return; try { const currentIdx = player.getPlaylistIndex(); const playlist = player.getPlaylist(); const totalVideos = playlist ? playlist.length : 0; showLoadingStatus(); if (typeof player.unMute === 'function') player.unMute(); if (currentIdx === 0 && totalVideos > 0) { player.playVideoAt(totalVideos - 1); } else { player.previousVideo(); } } catch (e) { console.error("Prev click error:", e); showErrorStatus("Control Error"); updateTrackStatus(); } }); }
+        if (ytNextBtn) { ytNextBtn.addEventListener('click', () => { if (!player || typeof player.getPlaylistIndex !== 'function' || typeof player.getPlaylist !== 'function') return; if (ytControlsContainer && ytControlsContainer.classList.contains('disabled')) return; try { const currentIdx = player.getPlaylistIndex(); const playlist = player.getPlaylist(); const totalVideos = playlist ? playlist.length : 0; const lastIdx = totalVideos > 0 ? totalVideos - 1 : -1; showLoadingStatus(); if (typeof player.unMute === 'function') player.unMute(); if (currentIdx === lastIdx && totalVideos > 0) { player.playVideoAt(0); } else { player.nextVideo(); } } catch (e) { console.error("Next click error:", e); showErrorStatus("Control Error"); updateTrackStatus(); } }); }
+        // --- END: YouTube Player Integration ---
+
+
+        // --- START: Initialization & Event Listeners ---
+
+        // Sets up event listeners and header animations. Called after posts are sorted.
+        function initializePageDisplay() {
+            switchSection('posts'); // Show posts section by default
+            setupEventListeners(); // Set up nav links, pagination, modal clicks
+            setupHeaderAnimations(); // Start header text animations
+        }
+
+        // Attaches event listeners to interactive elements
+        function setupEventListeners() {
+            // Navigation link clicks
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    switchSection(targetId);
+                });
+            });
+            // Pagination button clicks (uses event delegation)
+            if (postsPagination) {
+                postsPagination.addEventListener('click', (event) => {
+                    const button = event.target.closest('button');
+                    // Ignore clicks on non-buttons, disabled buttons, or the active page button
+                    if (!button || button.disabled || button.classList.contains('active')) return;
+                    const action = button.dataset.action; // 'prev', 'next'
+                    const page = button.dataset.page;     // page number string
+                    const totalPages = allPosts.length > 0 ? Math.ceil(allPosts.length / postsPerPage) : 0;
+                    let needsRender = false;
+                    // Determine new page based on click
+                    if (action === 'prev' && currentPage > 1) { currentPage--; needsRender = true; }
+                    else if (action === 'next' && currentPage < totalPages) { currentPage++; needsRender = true; }
+                    else if (page) { const pageNum = parseInt(page, 10); if (!isNaN(pageNum) && pageNum !== currentPage) { currentPage = pageNum; needsRender = true; } }
+                    // If page changed, re-render posts and scroll to top of posts section
+                    if (needsRender) {
+                        renderPosts();
+                        const postsSection = document.getElementById('posts');
+                        if(postsSection) { postsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                    }
+                });
+            }
+            // Modal close button click
+            if (closeModalBtn) { closeModalBtn.addEventListener('click', closeModal); }
+            // Click outside modal content to close
+            if (modal) { modal.addEventListener('click', (event) => { if (event.target === modal) { closeModal(); } }); }
+        }
+
+        // Handles the header text fade-in and change animation
+        function setupHeaderAnimations() {
+            headerTimeout = setTimeout(() => {
+                if (stimuliHeader) stimuliHeader.classList.add('show');
+                if (stationHeader) stationHeader.classList.add('show');
+                if (synapseHeader) synapseHeader.classList.add('show');
+                // Chain the second animation (text change)
+                setTimeout(()=> {
+                    if (synapseHeader) {
+                        synapseHeader.style.opacity = 0; // Fade out
+                        setTimeout(() => { // After fade out, change text and fade in
+                            synapseHeader.textContent = '..a unified perception framework';
+                            synapseHeader.style.opacity = 1;
+                        }, 500); // Match CSS transition duration
+                    }
+                }, 2500); // Delay before starting the text change
+            }, 500); // Initial delay
+        }
+
+        // --- Run on Page Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            disablePlayerControls(); // Disable YT controls until player is ready
+            hideStatus(); // Hide player status initially
+            // Fetch, process, sort, and display posts
+            fetch('content.json')
+                .then(response => {
+                    // Check for HTTP errors
+                    if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+                    return response.json(); // Parse JSON data
+                })
+                .then(data => {
+                    // Ensure fetched data is an array
+                    if (!Array.isArray(data)) {
+                        throw new Error("content.json did not return a valid array.");
+                    }
+
+                    // 1. Map data (e.g., add random comments)
+                    let processedPosts = data.map(post => {
+                        const comments = [];
+                        const numComments = getRandomInt(0, 5);
+                        const pool = post.commentPool ? [...post.commentPool] : [];
+                        if (pool.length > 0 && numComments > 0) {
+                            for (let i = 0; i < numComments && pool.length > 0; i++) {
+                                const randomIndex = Math.floor(Math.random() * pool.length);
+                                const text = pool.splice(randomIndex, 1)[0];
+                                if (text) { comments.push({ user: "Adrian", avatar: adrianAvatar, date: post.date || 'Unknown Date', text: text }); }
+                            }
+                        }
+                        const { commentPool, ...restOfPost } = post; // Remove pool from final object
+                        return { ...restOfPost, comments: comments }; // Add comments array
+                    });
+
+                    // 2. Sort posts by date (Newest First)
+                    // Uses Date objects for reliable comparison. Assumes 'date' field exists.
+                    processedPosts.sort((postA, postB) => {
+                        const dateA = new Date(postA.date);
+                        const dateB = new Date(postB.date);
+                        // Handle potential invalid date strings gracefully
+                        if (isNaN(dateA) && isNaN(dateB)) return 0; // Both invalid? Keep original relative order
+                        if (isNaN(dateA)) return 1;  // Invalid date A goes after valid date B
+                        if (isNaN(dateB)) return -1; // Invalid date B goes after valid date A
+                        // Both valid: sort descending (newest first)
+                        return dateB - dateA;
+                    });
+
+                    // 3. Assign sorted data to the global variable
+                    allPosts = processedPosts;
+
+                    // 4. Initialize page display (renders first page, sets up listeners/animations)
+                    initializePageDisplay();
+
+                })
+                .catch(error => {
+                    // Handle errors during fetch/parse/sort
+                    console.error("Could not fetch, parse, or process content.json:", error);
+                    if(postsContainer) postsContainer.innerHTML = "<p style='color: red; text-align: center;'>Error loading posts.</p>";
+                    // Still attempt to setup non-post related parts of the page
+                    setupEventListeners();
+                    setupHeaderAnimations();
+                });
+
+            // Set initial active navigation link based on the default section ('posts')
+            const activeSection = document.querySelector('main section.active');
+            if (activeSection) {
+                const activeLink = document.querySelector(`header nav ul li a[href="#${activeSection.id}"]`);
+                navLinks.forEach(link => link.classList.remove('active'));
+                if (activeLink) activeLink.classList.add('active');
+            } else {
+                // Fallback if somehow 'posts' isn't active initially
+                const postsLink = document.querySelector('header nav ul li a[href="#posts"]');
+                if (postsLink) postsLink.classList.add('active');
+            }
+        });
+        // --- END: Initialization & Event Listeners ---
+
+    </script>
+</body>
+</html>
