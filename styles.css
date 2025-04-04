@@ -43,7 +43,7 @@ header h2 {
     margin: 0 0 5px 0;
     font-size: 1em;
     font-weight: 600;
-    background: linear-gradient(to right, #6ee7b7, #3b82f6, #d946ef);
+    background: linear-gradient(to right, #B22234, #FFFFFF, #3C3B6E); /* US Flag Colors */
     -webkit-background-clip: text;
     color: transparent;
     display: inline-block;
