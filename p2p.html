@@ -7,84 +7,41 @@
     <style>
         /* --- GitHub Dark Theme Styling --- */
         :root {
-            /* Core Colors (GitHub Dark Dimmed Theme inspired) */
-            --bg-primary: #22272e; /* Canvas background */
-            --bg-secondary: #1c2128; /* Page background */
-            --border-primary: #444c56;
-            --border-secondary: #373e47; /* Slightly lighter border */
-            --text-primary: #adbac7; /* Body text */
-            --text-secondary: #768390; /* Muted text */
-            --text-link: #539bf5; /* Link blue */
-            --text-white: #f0f6fc; /* Brighter white text */
-
-            /* Button Colors (Adapted for Dark) */
-            --btn-primary-bg: #347d39;
-            --btn-primary-hover-bg: #46954a;
-            --btn-primary-text: var(--text-white);
-            --btn-primary-border: rgba(197, 209, 217, 0.1);
-            --btn-primary-shadow: 0 0 transparent; /* Less shadow needed */
-            --btn-primary-inset-shadow: inset 0 0 transparent;
-
-            --btn-secondary-bg: #373e47;
-            --btn-secondary-hover-bg: #444c56;
-            --btn-secondary-text: var(--text-primary);
-            --btn-secondary-border: rgba(197, 209, 217, 0.1);
-            --btn-secondary-shadow: 0 0 transparent;
-            --btn-secondary-inset-shadow: inset 0 0 transparent;
-
-            --btn-danger-bg: #373e47;
-            --btn-danger-hover-bg: #c93c37; /* Red background on hover */
-            --btn-danger-text: #e5534b; /* Red text */
-            --btn-danger-hover-text: var(--text-white);
-            --btn-danger-border: rgba(197, 209, 217, 0.1);
-            --btn-danger-hover-border: rgba(197, 209, 217, 0.1);
-            --btn-danger-shadow: 0 0 transparent;
-            --btn-danger-inset-shadow: inset 0 0 transparent;
-
-             /* Button Disabled State */
-            --btn-disabled-bg: rgba(55, 62, 71, 0.6);
-            --btn-disabled-text: rgba(118, 131, 144, 0.7);
-            --btn-disabled-border: rgba(197, 209, 217, 0.1);
-
-            /* Input Fields */
-            --input-bg: var(--bg-secondary);
-            --input-border: var(--border-secondary);
-            --input-focus-border: var(--text-link);
-            --input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Blue focus ring */
-            --input-text: var(--text-primary);
-
-            /* Status/Alert Colors (Adjusted for Dark) */
-            --status-success-bg: rgba(52, 125, 57, 0.3); /* Darker, transparent green */
-            --status-success-text: #56d364; /* Lighter green text */
-            --status-success-border: rgba(86, 211, 100, 0.3);
-            --status-error-bg: rgba(201, 60, 55, 0.2); /* Darker, transparent red */
-            --status-error-text: #e5534b; /* Lighter red text */
-            --status-error-border: rgba(229, 83, 75, 0.3);
-            --status-connecting-bg: rgba(59, 130, 246, 0.2); /* Darker, transparent blue */
-            --status-connecting-text: #539bf5; /* Lighter blue text */
-            --status-connecting-border: rgba(83, 155, 245, 0.3);
-
-            /* Message Colors (Adjusted for Dark) */
-            --own-message-bg: #2d5986; /* Dark blue background */
-            --own-message-text: var(--text-white);
-            --own-message-border: #376c9d;
-            --peer-message-bg: var(--bg-secondary); /* Use secondary dark bg */
-            --peer-message-text: var(--text-primary);
-            --peer-message-border: var(--border-secondary);
-            --system-message-color: var(--text-secondary);
-
-            /* Misc */
+            --bg-primary: #22272e; --bg-secondary: #1c2128; --border-primary: #444c56;
+            --border-secondary: #373e47; --text-primary: #adbac7; --text-secondary: #768390;
+            --text-link: #539bf5; --text-white: #f0f6fc; --btn-primary-bg: #347d39;
+            --btn-primary-hover-bg: #46954a; --btn-primary-text: var(--text-white);
+            --btn-primary-border: rgba(197, 209, 217, 0.1); --btn-primary-shadow: 0 0 transparent;
+            --btn-primary-inset-shadow: inset 0 0 transparent; --btn-secondary-bg: #373e47;
+            --btn-secondary-hover-bg: #444c56; --btn-secondary-text: var(--text-primary);
+            --btn-secondary-border: rgba(197, 209, 217, 0.1); --btn-secondary-shadow: 0 0 transparent;
+            --btn-secondary-inset-shadow: inset 0 0 transparent; --btn-danger-bg: #373e47;
+            --btn-danger-hover-bg: #c93c37; --btn-danger-text: #e5534b; --btn-danger-hover-text: var(--text-white);
+            --btn-danger-border: rgba(197, 209, 217, 0.1); --btn-danger-hover-border: rgba(197, 209, 217, 0.1);
+            --btn-danger-shadow: 0 0 transparent; --btn-danger-inset-shadow: inset 0 0 transparent;
+            --btn-disabled-bg: rgba(55, 62, 71, 0.6); --btn-disabled-text: rgba(118, 131, 144, 0.7);
+            --btn-disabled-border: rgba(197, 209, 217, 0.1); --input-bg: var(--bg-secondary);
+            --input-border: var(--border-secondary); --input-focus-border: var(--text-link);
+            --input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); --input-text: var(--text-primary);
+            --status-success-bg: rgba(52, 125, 57, 0.3); --status-success-text: #56d364;
+            --status-success-border: rgba(86, 211, 100, 0.3); --status-error-bg: rgba(201, 60, 55, 0.2);
+            --status-error-text: #e5534b; --status-error-border: rgba(229, 83, 75, 0.3);
+            --status-connecting-bg: rgba(59, 130, 246, 0.2); --status-connecting-text: #539bf5;
+            --status-connecting-border: rgba(83, 155, 245, 0.3); --own-message-bg: #2d5986;
+            --own-message-text: var(--text-white); --own-message-border: #376c9d;
+            --peer-message-bg: var(--bg-secondary); --peer-message-text: var(--text-primary);
+            --peer-message-border: var(--border-secondary); --system-message-color: var(--text-secondary);
             --border-radius: 6px;
         }
 
-        /* --- Layout Adjustments for Full Height & Internal Scroll --- */
+        /* --- Layout Adjustments --- */
         html { height: 100%; overflow: hidden; }
         body {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
             display:flex; flex-direction:column; align-items:center;
             min-height:100vh; padding: 0 24px; background-color:var(--bg-secondary);
             color:var(--text-primary); font-size:14px; line-height:1.5; box-sizing:border-box; margin: 0;
-            overflow: hidden; /* Prevent body scrollbar */
+            overflow: hidden;
         }
         .container {
             width:100%; max-width:720px; background:var(--bg-primary); border-radius:var(--border-radius);
@@ -92,22 +49,12 @@
             flex-grow: 1; flex-shrink: 1; height: 0; min-height: 400px;
             overflow: hidden; margin: 24px 0;
         }
-         /* --- End Layout Adjustments --- */
+        /* --- End Layout Adjustments --- */
 
         .header {padding:16px 24px;border-bottom:1px solid var(--border-primary);text-align:center;background-color:var(--bg-primary);flex-shrink:0}
         .header h2 {margin:0;font-size:1.35em;font-weight:600;color:var(--text-primary)}.header .brand {color:var(--text-link);font-weight:600}
-        .content-area {
-            padding: 24px;
-            display:flex; flex-direction:column; flex-grow:1;
-            overflow-y: auto; /* Allow content area itself to scroll if needed */
-             -webkit-overflow-scrolling: touch; /* Momentum scroll on iOS */
-        }
-        textarea {
-            width: 100%; box-sizing: border-box; min-height: 70px; margin-bottom: 10px; padding: 8px 12px;
-            border: 1px solid var(--input-border); border-radius: var(--border-radius); font-family: inherit;
-            font-size: 1em; resize: vertical; background-color: var(--input-bg); box-shadow: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease; color: var(--input-text);
-        }
+        .content-area { padding: 24px; display:flex; flex-direction:column; flex-grow:1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        textarea { width: 100%; box-sizing: border-box; min-height: 70px; margin-bottom: 10px; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--border-radius); font-family: inherit; font-size: 1em; resize: vertical; background-color: var(--input-bg); box-shadow: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; color: var(--input-text); }
         textarea:focus {outline:none;border-color:var(--input-focus-border);box-shadow:var(--input-focus-shadow)}
         input::placeholder,textarea::placeholder {color:var(--text-secondary)}
         button {position:relative;display:inline-block;padding:5px 16px;font-size:14px;font-weight:500;line-height:20px;white-space:nowrap;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;border:1px solid var(--btn-primary-border);border-radius:var(--border-radius);appearance:none;transition:background-color .2s cubic-bezier(.3,0,.5,1),border-color .2s ease;margin-right:8px;margin-bottom:10px;text-align:center;background-color:var(--btn-primary-bg);color:var(--btn-primary-text);box-shadow:var(--btn-primary-shadow),var(--btn-primary-inset-shadow)}
@@ -121,7 +68,7 @@
         button.disconnect:hover:not(:disabled) {background-color:var(--btn-danger-hover-bg);color:var(--btn-danger-hover-text);border-color:var(--btn-danger-hover-border)}
         button.disconnect:disabled {color:rgba(229,83,75,.7);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border)}
 
-        #chat-interface {display:flex;flex-direction:column;flex-grow:1; min-height: 0;} /* Add min-height for flex grow */
+        #chat-interface {display:flex;flex-direction:column;flex-grow:1; min-height: 0;}
         #chat-area-wrapper {display:flex;flex-direction:column;flex-grow:1;overflow:hidden;margin-top:20px;border:1px solid var(--border-primary);border-radius:var(--border-radius);background-color:var(--bg-primary)}
         #chat-log {flex-grow:1;overflow-y:auto;padding:16px;font-size:1em;display:flex;flex-direction:column;}
         #chat-log-inner {display:flex;flex-direction:column;gap:12px}
@@ -129,24 +76,45 @@
         #chat-log .own {background-color:var(--own-message-bg);color:var(--own-message-text);border-color:var(--own-message-border);align-self:flex-end;margin-left:auto;border-bottom-right-radius:0}
         #chat-log .peer {background-color:var(--peer-message-bg);color:var(--peer-message-text);border-color:var(--peer-message-border);align-self:flex-start;margin-right:auto;border-bottom-left-radius:0}
         #chat-log .system {font-size:.9em;text-align:center;color:var(--system-message-color);background:0 0;align-self:center;padding:8px 0;width:100%;border:none;max-width:100%}
-        #message-input-container {display:flex;padding:8px 16px;border-top:1px solid var(--border-primary);background-color:var(--bg-primary);align-items:flex-end;flex-shrink:0;gap:8px}
-        #message-input { /* Chat message input */ flex-grow: 1; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--border-radius); margin-right: 8px; font-size: 1em; font-family: inherit; resize: none; background-color: var(--input-bg); line-height: 1.5; min-height: 34px; height: auto; overflow-y: hidden; color: var(--input-text); margin-bottom: 0; }
+
+        #message-input-container {
+             display: flex;
+             padding: 8px 16px;
+             border-top: 1px solid var(--border-primary);
+             background-color: var(--bg-primary);
+             /* MODIFIED: Align items to the bottom edge */
+             align-items: flex-end;
+             flex-shrink: 0; /* Prevent shrinking */
+             gap: 8px;
+        }
+        #message-input { /* Chat message input */
+            flex-grow: 1; padding: 8px 12px; border: 1px solid var(--input-border);
+            border-radius: var(--border-radius); font-size: 1em; font-family: inherit;
+            resize: none; background-color: var(--input-bg); line-height: 1.5;
+            min-height: 34px; height: auto; overflow-y: hidden; color: var(--input-text);
+            margin-bottom: 0;
+        }
         #message-input:focus { outline: none; border-color: var(--input-focus-border); box-shadow: var(--input-focus-shadow); }
-        #send-btn {margin:0;flex-shrink:0;align-self:flex-end}
+        #send-btn {
+             margin: 0; flex-shrink: 0;
+             /* MODIFIED: Small adjustment for visual alignment */
+             margin-bottom: 1px;
+        }
+
         #status {font-weight:500;padding:10px 16px;font-size:1em;text-align:center;margin-bottom:24px;border-radius:var(--border-radius);border:1px solid transparent;transition:background-color .3s ease,color .3s ease,border-color .3s ease; flex-shrink: 0;}
         .status-disconnected {background-color:var(--status-error-bg);color:var(--status-error-text);border-color:var(--status-error-border)}
         .status-connecting {background-color:var(--status-connecting-bg);color:var(--status-connecting-text);border-color:var(--status-connecting-border)}
         .status-connected {background-color:var(--status-success-bg);color:var(--status-success-text);border-color:var(--status-success-border)}
         .hidden {display:none!important}
         label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9em; color: var(--text-primary); }
-        #signaling { border: none; padding: 0; border-radius: 0; margin-top: 0; background-color: transparent; flex-shrink: 0; } /* Keep signaling from shrinking */
+        #signaling { border: none; padding: 0; border-radius: 0; margin-top: 0; background-color: transparent; flex-shrink: 0; }
         #signaling h3 { font-size: 1.2em; font-weight: 600; margin-top: 0; margin-bottom: 8px; color: var(--text-primary); text-align: center; padding-bottom: 8px; border-bottom: 1px solid var(--border-secondary); }
         #signaling p { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 16px; text-align: center; line-height: 1.4; }
         #signaling label { margin-top: 16px; margin-bottom: 4px;}
         .step { margin-bottom: 16px; padding-top: 16px; border-top: 1px solid var(--border-secondary); }
         .step:first-of-type { border-top: none; padding-top: 0; margin-top: 16px; }
         .step p { font-size: 0.85em; color: var(--text-secondary); margin-top: 6px; margin-bottom: 0; text-align: left; }
-        footer {text-align:center;padding-top:16px;font-size:.85em;color:var(--text-secondary);width:100%;border-top:1px solid var(--border-primary); margin-top: 0; /* Footer sits naturally */ flex-shrink: 0;padding-bottom: 24px;margin-bottom: 0;}
+        footer {text-align:center;padding-top:16px;font-size:.85em;color:var(--text-secondary);width:100%;border-top:1px solid var(--border-primary); margin-top: 0; flex-shrink: 0;padding-bottom: 24px;margin-bottom: 0;}
 
     </style>
 </head>
@@ -194,7 +162,6 @@
 
             <!-- Chat Section (Initially Hidden) -->
             <div id="chat-interface" class="hidden">
-                 <!-- Removed chat controls like topic/peer count -->
                  <div id="chat-area-wrapper">
                     <div id="chat-log"><div id="chat-log-inner"><!-- Messages Appear Here --></div></div>
                     <div id="message-input-container">
@@ -209,13 +176,13 @@
 
     <!-- Footer -->
     <footer>
-        Stimuli Network • AI-Generated • P2P Manual Connect
+        Stimuli Network • AI-Generated • P2P Chat
     </footer>
 
     <!-- Original P2P Manual Signaling JavaScript -->
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
-            // --- DOM Elements ---
+            // DOM Elements
             const createOfferBtn = document.getElementById('create-offer-btn');
             const offerPasteArea = document.getElementById('offer-paste-area');
             const createAnswerBtn = document.getElementById('create-answer-btn');
@@ -232,190 +199,39 @@
             const sendBtn = document.getElementById('send-btn');
             const disconnectBtn = document.getElementById('disconnect-btn');
 
-            // --- State Variables ---
+            // State Variables
             let peerConnection = null;
             let dataChannel = null;
             let isOfferer = false;
 
-            // --- WebRTC Config ---
-            const rtcConfig = {
-                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-            };
+            // WebRTC Config
+            const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
-            // --- Utility Functions ---
-            function log(message) { console.log(`[LOG] ${message}`); }
-            function logError(message, error) { console.error(`[ERROR] ${message}`, error); }
+            // Utility Functions
+            function log(m){console.log(`[LOG] ${m}`)} function logError(m,e){console.error(`[ERROR] ${m}`,e)}
+            function updateStatus(m,t='disconnected'){if(!statusDiv)return;statusDiv.textContent=`Status: ${m}`;statusDiv.className=`status status-${t}`;const i=(t==='connected');signalingDiv.classList.toggle('hidden',i);chatInterfaceDiv.classList.toggle('hidden',!i);}
+            function displayMessage(t,s){if(!chatLogInner||!chatLog)return;const d=document.createElement('div');d.textContent=t;d.className=`message ${s}`;chatLogInner.appendChild(d);chatLog.scrollTop=chatLog.scrollHeight;} // Scroll internal log
+            function resetUIForDisconnect(){if(copyArea)copyArea.value='';if(offerPasteArea){offerPasteArea.value='';offerPasteArea.disabled=false;}if(answerPasteArea){answerPasteArea.value='';answerPasteArea.disabled=false;}if(copyBtn)copyBtn.disabled=true;if(createAnswerBtn)createAnswerBtn.disabled=true;if(acceptAnswerBtn)acceptAnswerBtn.disabled=true;if(createOfferBtn)createOfferBtn.disabled=false;if(messageInput){messageInput.value='';messageInput.style.height='auto';adjustTextareaHeight(messageInput);}if(chatLogInner)chatLogInner.innerHTML='';}
+            function closeConnection(tr="unknown"){log(`Closing connection: ${tr}`);let o=(peerConnection?.connectionState==='connected')||(dataChannel?.readyState==='open');if(dataChannel){dataChannel.onopen=null;dataChannel.onclose=null;dataChannel.onerror=null;dataChannel.onmessage=null;if(dataChannel.readyState!=='closed')try{dataChannel.close();}catch(e){logError("DC close error",e);}dataChannel=null;}if(peerConnection){peerConnection.onicecandidate=null;peerConnection.onconnectionstatechange=null;peerConnection.ondatachannel=null;if(peerConnection.connectionState!=='closed')try{peerConnection.close();}catch(e){logError("PC close error",e);}peerConnection=null;}isOfferer=false;resetUIForDisconnect();const n=statusDiv?statusDiv.className.split(' ').pop().replace('status-',''):'disconnected';if(n!=='disconnected'||o){updateStatus('Disconnected','disconnected');displayMessage("Connection closed.","system");}else{signalingDiv.classList.remove('hidden');chatInterfaceDiv.classList.add('hidden');}if(messageInput)adjustTextareaHeight(messageInput);}
+            function setupDataChannelEvents(c){if(!c){logError("setupDataChannelEvents: null");return;}c.onopen=()=>{updateStatus("Connected",'connected');displayMessage("Chat connected!","system");if(messageInput)messageInput.focus();};c.onclose=()=>{closeConnection("dataChannel.onclose");};c.onerror=(e)=>{logError("DC error",e);closeConnection("dataChannel.onerror");};c.onmessage=(e)=>{displayMessage(e.data,'peer');};}
+            function createPeerConnection(){if(peerConnection&&peerConnection.connectionState!=='closed'){log("Closing existing PC");closeConnection("createPeerConnection_reuse");return false;}log("Creating new PC");try{peerConnection=new RTCPeerConnection(rtcConfig);peerConnection.onicecandidate=(e)=>{if(!peerConnection||peerConnection.signalingState==='closed')return;if(!e.candidate){setTimeout(()=>{if(peerConnection?.localDescription?.sdp&&(copyArea.value.startsWith("Gathering")||!copyArea.value)){try{copyArea.value=JSON.stringify(peerConnection.localDescription);copyBtn.disabled=false;}catch(err){logError("SDP stringify error",err);copyArea.value="Error.";copyBtn.disabled=true;}}else if(!peerConnection?.localDescription?.sdp&©Area.value.startsWith("Gathering")){copyArea.value="Error: SDP empty.";copyBtn.disabled=true;}},300);}};peerConnection.onconnectionstatechange=()=>{if(!peerConnection)return;log(`PC state: ${peerConnection.connectionState}`);const s=peerConnection.connectionState;switch(s){case"connecting":if(!statusDiv.className.includes('connected'))updateStatus("Connecting...",'connecting');break;case"connected":break;case"disconnected":case"failed":case"closed":const m=s==='failed'?'Connection Failed':'Peer Disconnected';logError(`PC state closed: ${s}`);if(!statusDiv.textContent.includes('Disconnected')&&!statusDiv.textContent.includes('Failed'))updateStatus(m,'disconnected');closeConnection(`connectionstatechange_${s}`);break;}};peerConnection.ondatachannel=(e)=>{log("ondatachannel event");dataChannel=e.channel;setupDataChannelEvents(dataChannel);};return true;}catch(err){logError("PC creation failed",err);updateStatus("Initialization Failed","disconnected");return false;}}
 
-            function updateStatus(message, type = 'disconnected') {
-                if (!statusDiv) return;
-                statusDiv.textContent = `Status: ${message}`;
-                statusDiv.className = `status status-${type}`;
-                const isConnected = (type === 'connected');
-                signalingDiv.classList.toggle('hidden', isConnected);
-                chatInterfaceDiv.classList.toggle('hidden', !isConnected);
-                 // Ensure chat log scrolls internally when chat becomes visible
-                // if (isConnected) chatLog.scrollTop = chatLog.scrollHeight;
-            }
+            // Button Click Handlers
+            async function createOfferHandler(){closeConnection("offer_start");isOfferer=true;updateStatus("Initializing...",'connecting');if(!createPeerConnection()){updateStatus("Init Failed","disconnected");return;}if(!peerConnection){logError("PC null after create.");return;}try{dataChannel=peerConnection.createDataChannel('chat',{reliable:true});log("DC created");setupDataChannelEvents(dataChannel);const o=await peerConnection.createOffer();if(!peerConnection||peerConnection.signalingState==='closed')return;await peerConnection.setLocalDescription(o);log("Offer created/set");copyArea.value="Gathering candidates...";copyBtn.disabled=true;updateStatus("Offer Created. Copy & send.",'connecting');createOfferBtn.disabled=true;answerPasteArea.disabled=false;acceptAnswerBtn.disabled=false;offerPasteArea.disabled=true;}catch(e){logError("Offer creation failed",e);closeConnection("offer_fail");}}
+            async function createAnswerHandler(){const t=offerPasteArea.value.trim();if(!t){alert("Paste offer first.");return;}isOfferer=false;if(peerConnection)closeConnection("answer_reuse");updateStatus("Initializing...",'connecting');if(!createPeerConnection()){updateStatus("Init Failed","disconnected");return;}if(!peerConnection){logError("PC null after create.");updateStatus("Internal Error","disconnected");return;}let o;try{o=JSON.parse(t);}catch(e){logError("Invalid Offer JSON",e);alert("Invalid Offer JSON.");updateStatus("Invalid Offer","disconnected");closeConnection("answer_invalid_json");return;}if(o.type!=='offer'){logError(`Not offer: ${o.type}`);alert("Not an Offer msg.");updateStatus("Invalid Offer Type","disconnected");closeConnection("answer_wrong_type");return;}try{await peerConnection.setRemoteDescription(new RTCSessionDescription(o));log("Offer set (remote).");const a=await peerConnection.createAnswer();if(!peerConnection||peerConnection.signalingState==='closed')return;await peerConnection.setLocalDescription(a);log("Answer created/set.");copyArea.value="Gathering candidates...";copyBtn.disabled=true;updateStatus("Answer Created. Copy & send.",'connecting');createAnswerBtn.disabled=true;offerPasteArea.disabled=true;createOfferBtn.disabled=true;answerPasteArea.disabled=true;acceptAnswerBtn.disabled=true;}catch(e){logError("Answer creation failed",e);closeConnection("answer_fail");}}
+            async function acceptAnswerHandler(){if(!isOfferer)return;const t=answerPasteArea.value.trim();if(!t){alert("Paste answer first.");return;}if(!peerConnection||peerConnection.signalingState!=='have-local-offer'){logError(`Invalid state: ${peerConnection?.signalingState}`);alert("Create offer first.");closeConnection("accept_invalid_state");return;}let a;try{a=JSON.parse(t);}catch(e){logError("Invalid Answer JSON",e);alert("Invalid Answer JSON.");updateStatus("Invalid Answer","disconnected");return;}if(a.type!=='answer'){logError(`Not answer: ${a.type}`);alert("Not an Answer msg.");updateStatus("Invalid Answer Type","disconnected");return;}try{await peerConnection.setRemoteDescription(new RTCSessionDescription(a));log("Answer set (remote).");updateStatus("Connecting P2P...",'connecting');answerPasteArea.disabled=true;acceptAnswerBtn.disabled=true;}catch(e){logError("Set answer failed",e);closeConnection("accept_fail");}}
+            function copyHandler(){if(copyArea.value&&!copyBtn.disabled){navigator.clipboard.writeText(copyArea.value).then(()=>{const o=copyBtn.textContent;copyBtn.textContent='Copied!';setTimeout(()=>{copyBtn.textContent=o;},1500);}).catch(e=>{logError('Copy failed: ',e);alert('Copy failed.');});}}
+            function sendHandler(){const m=messageInput.value.trim();if(!m)return;if(dataChannel&&dataChannel.readyState==='open'){try{dataChannel.send(m);displayMessage(m,'own');messageInput.value='';messageInput.focus();adjustTextareaHeight(messageInput);}catch(e){logError("Send error",e);displayMessage("Send error.","system");closeConnection("send_error");}}else{displayMessage("Not connected.","system");if(!dataChannel||['closing','closed'].includes(dataChannel.readyState))closeConnection("send_chan_closed");}}
+            function disconnectHandler(){displayMessage("Disconnecting...","system");closeConnection("disconnect_button");}
 
-            function displayMessage(text, sender) {
-                 if (!chatLogInner || !chatLog) return;
-                const msgDiv = document.createElement('div');
-                msgDiv.textContent = text;
-                msgDiv.className = `message ${sender}`;
-                chatLogInner.appendChild(msgDiv);
-                // Scroll internal chat log, not window
-                chatLog.scrollTop = chatLog.scrollHeight;
-            }
+            // Input Event Handlers
+            function offerPasteHandler(){const t=offerPasteArea.value.trim();createAnswerBtn.disabled=!t;if(t&&createOfferBtn)createOfferBtn.disabled=true;}
+            function answerPasteHandler(){const t=answerPasteArea.value.trim();acceptAnswerBtn.disabled=!(t&&isOfferer&&peerConnection?.signalingState==='have-local-offer');}
+            function adjustTextareaHeight(el){if(!el)return;el.style.height='auto';const m=150;const s=el.scrollHeight;el.style.height=Math.min(s,m)+'px';el.style.overflowY=s>m?'auto':'hidden';}
+            function messageInputHandler(e){if(e&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendHandler();}else{adjustTextareaHeight(messageInput);}}
 
-            function resetUIForDisconnect() {
-                 if(copyArea) copyArea.value = '';
-                 if(offerPasteArea) { offerPasteArea.value = ''; offerPasteArea.disabled = false; }
-                 if(answerPasteArea) { answerPasteArea.value = ''; answerPasteArea.disabled = false; }
-                 if(copyBtn) copyBtn.disabled = true;
-                 if(createAnswerBtn) createAnswerBtn.disabled = true;
-                 if(acceptAnswerBtn) acceptAnswerBtn.disabled = true;
-                 if(createOfferBtn) createOfferBtn.disabled = false;
-                 if(messageInput) { messageInput.value = ''; messageInput.style.height = 'auto'; adjustTextareaHeight(messageInput); }
-                 if(chatLogInner) chatLogInner.innerHTML = '';
-            }
-
-            function closeConnection(triggeredBy = "unknown") {
-                log(`Closing connection: ${triggeredBy}`);
-                let connectionWasOpen = (peerConnection?.connectionState === 'connected') || (dataChannel?.readyState === 'open');
-
-                if (dataChannel) {
-                    dataChannel.onopen = null; dataChannel.onclose = null; dataChannel.onerror = null; dataChannel.onmessage = null;
-                    if (dataChannel.readyState !== 'closed') try { dataChannel.close(); } catch (e) { logError("DC close error", e); }
-                    dataChannel = null;
-                }
-                if (peerConnection) {
-                    peerConnection.onicecandidate = null; peerConnection.onconnectionstatechange = null; peerConnection.ondatachannel = null;
-                    if (peerConnection.connectionState !== 'closed') try { peerConnection.close(); } catch (e) { logError("PC close error", e); }
-                    peerConnection = null;
-                }
-                isOfferer = false;
-                resetUIForDisconnect();
-
-                 const currentStatusType = statusDiv ? statusDiv.className.split(' ').pop().replace('status-', '') : 'disconnected';
-                 if (currentStatusType !== 'disconnected' || connectionWasOpen) {
-                      updateStatus('Disconnected', 'disconnected');
-                      displayMessage("Connection closed.", "system");
-                 } else {
-                     // Ensure correct visibility on initial load or non-connected close
-                     signalingDiv.classList.remove('hidden');
-                     chatInterfaceDiv.classList.add('hidden');
-                 }
-                 if (messageInput) adjustTextareaHeight(messageInput);
-            }
-
-            function setupDataChannelEvents(channel) {
-                if (!channel) { logError("setupDataChannelEvents: null channel"); return; }
-                channel.onopen = () => { updateStatus("Connected", 'connected'); displayMessage("Chat connected!", "system"); if (messageInput) messageInput.focus(); };
-                channel.onclose = () => { closeConnection("dataChannel.onclose"); };
-                channel.onerror = (e) => { logError("Data channel error", e); closeConnection("dataChannel.onerror"); };
-                channel.onmessage = (e) => { displayMessage(e.data, 'peer'); };
-            }
-
-            function createPeerConnection() {
-                 if (peerConnection && peerConnection.connectionState !== 'closed') { log("Closing existing PC"); closeConnection("createPeerConnection_reuse"); return false; } // Added return false
-                 log("Creating new PC");
-                 try {
-                     peerConnection = new RTCPeerConnection(rtcConfig);
-                     peerConnection.onicecandidate = (e) => {
-                         if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                         if (!e.candidate) {
-                             setTimeout(() => { // Final update after delay
-                                 if (peerConnection?.localDescription?.sdp && copyArea.value.startsWith("Gathering")) {
-                                     try { copyArea.value = JSON.stringify(peerConnection.localDescription); copyBtn.disabled = false; }
-                                     catch (err) { logError("SDP stringify error", err); copyArea.value = "Error generating SDP."; copyBtn.disabled = true;}
-                                } else if (!peerConnection?.localDescription?.sdp && copyArea.value.startsWith("Gathering")){
-                                     copyArea.value = "Error: SDP empty."; copyBtn.disabled = true;
-                                }
-                             }, 300); // Slightly longer delay
-                         }
-                         // Don't update copyArea on every candidate for simplicity
-                     };
-                     peerConnection.onconnectionstatechange = () => {
-                          if (!peerConnection) return; log(`PC state: ${peerConnection.connectionState}`);
-                         switch(peerConnection.connectionState) {
-                             case "connecting": if (!statusDiv.className.includes('connected')) updateStatus("Connecting...", 'connecting'); break;
-                             case "connected": /* Handled by DC open */ break;
-                             case "disconnected": case "failed": case "closed":
-                                  const msg = state === 'failed' ? 'Connection Failed' : 'Peer Disconnected';
-                                  logError(`PC state closed: ${peerConnection.connectionState}`);
-                                  // Update status only if not already showing disconnected
-                                  if (!statusDiv.textContent.includes('Disconnected') && !statusDiv.textContent.includes('Failed')) updateStatus(msg, 'disconnected');
-                                  closeConnection(`connectionstatechange_${peerConnection.connectionState}`); break;
-                         }
-                     };
-                     peerConnection.ondatachannel = (e) => { log("ondatachannel event"); dataChannel = e.channel; setupDataChannelEvents(dataChannel); };
-                     return true;
-                 } catch(error) { logError("PC creation failed", error); updateStatus("Initialization Failed", "disconnected"); return false; }
-            }
-
-            // --- Button Click Handlers ---
-            async function createOfferHandler() {
-                 closeConnection("createOfferHandler_start"); isOfferer = true; updateStatus("Initializing...", 'connecting');
-                 if (!createPeerConnection()) { updateStatus("Init Failed", "disconnected"); return; }
-                 if (!peerConnection) { logError("PC null after create."); return; }
-                 try {
-                     dataChannel = peerConnection.createDataChannel('chat', { reliable: true }); log("DC created (offerer)"); setupDataChannelEvents(dataChannel);
-                     const offer = await peerConnection.createOffer(); if (!peerConnection || peerConnection.signalingState === 'closed') return; await peerConnection.setLocalDescription(offer); log("Offer created & set");
-                     copyArea.value = "Gathering candidates..."; copyBtn.disabled = true; updateStatus("Offer Created. Copy & send.", 'connecting');
-                     createOfferBtn.disabled = true; answerPasteArea.disabled = false; acceptAnswerBtn.disabled = false; offerPasteArea.disabled = true;
-                 } catch (err) { logError("Offer creation failed", err); closeConnection("offer_fail"); }
-            }
-
-            async function createAnswerHandler() {
-                 const offerText = offerPasteArea.value.trim(); if (!offerText) { alert("Paste offer first."); return; }
-                 isOfferer = false; if (peerConnection) closeConnection("createAnswer_reuse"); updateStatus("Initializing...", 'connecting');
-                 if (!createPeerConnection()) { updateStatus("Init Failed", "disconnected"); return; } if(!peerConnection) { logError("PC null after create."); updateStatus("Internal Error", "disconnected"); return; }
-                 let offer; try { offer = JSON.parse(offerText); } catch (err) { logError("Invalid Offer JSON", err); alert("Invalid Offer JSON."); updateStatus("Invalid Offer", "disconnected"); closeConnection("answer_invalid_json"); return; }
-                 if (offer.type !== 'offer') { logError(`Not an offer type: ${offer.type}`); alert("Not an Offer message."); updateStatus("Invalid Offer Type", "disconnected"); closeConnection("answer_wrong_type"); return; }
-                 try {
-                     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer)); log("Offer set (remote).");
-                     const answer = await peerConnection.createAnswer(); if (!peerConnection || peerConnection.signalingState === 'closed') return; await peerConnection.setLocalDescription(answer); log("Answer created & set.");
-                     copyArea.value = "Gathering candidates..."; copyBtn.disabled = true; updateStatus("Answer Created. Copy & send.", 'connecting');
-                     createAnswerBtn.disabled = true; offerPasteArea.disabled = true; createOfferBtn.disabled = true; answerPasteArea.disabled = true; acceptAnswerBtn.disabled = true;
-                 } catch (err) { logError("Answer creation failed", err); closeConnection("answer_fail"); }
-            }
-
-            async function acceptAnswerHandler() {
-                if (!isOfferer) return; const answerText = answerPasteArea.value.trim(); if (!answerText) { alert("Paste answer first."); return; }
-                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') { logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`); alert("Create offer first."); closeConnection("accept_invalid_state"); return; }
-                 let answer; try { answer = JSON.parse(answerText); } catch (err) { logError("Invalid Answer JSON", err); alert("Invalid Answer JSON."); updateStatus("Invalid Answer", "disconnected"); return; }
-                 if (answer.type !== 'answer') { logError(`Not an answer type: ${answer.type}`); alert("Not an Answer message."); updateStatus("Invalid Answer Type", "disconnected"); return; }
-                 try {
-                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer)); log("Answer set (remote)."); updateStatus("Connecting P2P...", 'connecting');
-                     answerPasteArea.disabled = true; acceptAnswerBtn.disabled = true;
-                 } catch (err) { logError("Set answer failed", err); closeConnection("accept_fail"); }
-            }
-
-            function copyHandler() {
-                 if (copyArea.value && !copyBtn.disabled) { navigator.clipboard.writeText(copyArea.value).then(() => { const o = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = o; }, 1500); }).catch(err => { logError('Copy failed: ', err); alert('Copy failed.'); }); }
-            }
-
-            function sendHandler() {
-                 const msg = messageInput.value.trim(); if (!msg) return;
-                 if (dataChannel && dataChannel.readyState === 'open') { try { dataChannel.send(msg); displayMessage(msg, 'own'); messageInput.value = ''; messageInput.focus(); adjustTextareaHeight(messageInput); } catch (e) { logError("Send DC error", e); displayMessage("Send error.", "system"); closeConnection("send_error"); } }
-                 else { displayMessage("Not connected.", "system"); if(!dataChannel || ['closing', 'closed'].includes(dataChannel.readyState)) closeConnection("send_chan_closed"); }
-            }
-            function disconnectHandler() { displayMessage("Disconnecting...", "system"); closeConnection("disconnect_button"); }
-
-            // --- Input Event Handlers ---
-            function offerPasteHandler() { const txt = offerPasteArea.value.trim(); createAnswerBtn.disabled = !txt; if (txt && createOfferBtn) createOfferBtn.disabled = true; }
-            function answerPasteHandler() { const txt = answerPasteArea.value.trim(); acceptAnswerBtn.disabled = !(txt && isOfferer && peerConnection?.signalingState === 'have-local-offer'); }
-            function adjustTextareaHeight(el) { if (!el) return; el.style.height='auto'; const maxH=150; const scrollH=el.scrollHeight; el.style.height=Math.min(scrollH, maxH)+'px'; el.style.overflowY=scrollH>maxH?'auto':'hidden'; }
-            function messageInputHandler(e) { if (e && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendHandler(); } else { adjustTextareaHeight(messageInput); } }
-
-            // --- Initialization ---
-            function initialize() {
-                 if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !copyBtn || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) { logError("DOM init failed!"); document.body.innerHTML = "<h1>Error: Init failed. Check element IDs.</h1>"; return; }
-                 createOfferBtn.onclick = createOfferHandler; createAnswerBtn.onclick = createAnswerHandler; acceptAnswerBtn.onclick = acceptAnswerHandler; copyBtn.onclick = copyHandler; sendBtn.onclick = sendHandler; disconnectBtn.onclick = disconnectHandler;
-                 offerPasteArea.oninput = offerPasteHandler; answerPasteArea.oninput = answerPasteHandler; messageInput.onkeydown = messageInputHandler; messageInput.oninput = () => adjustTextareaHeight(messageInput);
-                 closeConnection("initialize"); adjustTextareaHeight(messageInput);
-                 log("P2P Manual Chat Initialized");
-            }
+            // Initialization
+            function initialize(){if(!createOfferBtn||!offerPasteArea||!createAnswerBtn||!answerPasteArea||!acceptAnswerBtn||!copyArea||!copyBtn||!statusDiv||!signalingDiv||!chatInterfaceDiv||!chatLog||!chatLogInner||!messageInput||!sendBtn||!disconnectBtn){logError("DOM init failed!");document.body.innerHTML="<h1>Error: Init failed.</h1>";return;}createOfferBtn.onclick=createOfferHandler;createAnswerBtn.onclick=createAnswerHandler;acceptAnswerBtn.onclick=acceptAnswerHandler;copyBtn.onclick=copyHandler;sendBtn.onclick=sendHandler;disconnectBtn.onclick=disconnectHandler;offerPasteArea.oninput=offerPasteHandler;answerPasteArea.oninput=answerPasteHandler;messageInput.onkeydown=messageInputHandler;messageInput.oninput=()=>adjustTextareaHeight(messageInput);closeConnection("initialize");adjustTextareaHeight(messageInput);log("P2P Chat Initialized");}
             initialize();
         }); // End DOMContentLoaded
     </script>
