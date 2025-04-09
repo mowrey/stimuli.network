@@ -1,0 +1,20 @@
+{
+  "name": "stimuli-network-ai-chat-server",
+  "version": "1.0.0",
+  "description": "WebSocket Relay Server for Anonymous AI Chat Room with Moderation & Flagging",
+  "main": "signaling_server.js",
+  "scripts": {
+    "start": "node signaling_server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stimuli Network",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.11.3",
+    "uuid": "^9.0.1",
+    "ws": "^8.17.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
