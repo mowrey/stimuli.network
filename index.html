@@ -160,6 +160,11 @@
                     </select>
                     <button id="join-selected-btn">Join Selected</button>
                 </div>
+
+                <!-- === ADDED P2P BUTTON HERE === -->
+                <button onclick="window.location.href='p2p.html'" style="margin-top: 15px;">P2P Chat</button>
+                <!-- === END ADDED BUTTON === -->
+
                 <p id="connection-status-text"></p>
             </div>
 
@@ -187,7 +192,7 @@
         Stimuli Network • AI-Generated • Anonymous AI Chat
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript (No changes needed for the button addition) -->
     <script>
         // NO CHANGES TO JAVASCRIPT NEEDED FOR THIS LAYOUT FIX
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -212,6 +217,7 @@
             const askAiBtn = document.getElementById('ask-ai-btn');
             const topicSelect = document.getElementById('topic-select');
             const joinSelectedBtn = document.getElementById('join-selected-btn');
+            // Note: No need to get the P2P button by ID since its action is inline HTML
 
             // --- State Variables ---
             let webSocket = null;
@@ -344,6 +350,7 @@
                  if (!findChatBtn || !connectionStatusText || !statusDiv || !connectionSetupDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn || !currentTopicDiv || !peerCountDiv || !askAiBtn || !topicSelect || !joinSelectedBtn ) { logError("DOM init failed!"); document.body.innerHTML = "<h1>Error: Init failed. Check IDs.</h1>"; return; }
                  chatTopics.forEach(topic => { const option = document.createElement('option'); option.value = topic; option.textContent = topic; topicSelect.appendChild(option); });
                  findChatBtn.onclick = findChatBtnHandler; joinSelectedBtn.onclick = joinSelectedBtnHandler; sendBtn.onclick = sendHandler; disconnectBtn.onclick = disconnectHandler; messageInput.onkeydown = messageInputHandler; messageInput.oninput = () => adjustTextareaHeight(messageInput); askAiBtn.onclick = askAiBtnHandler;
+                 // The P2P button uses inline onclick, so no event listener setup is needed here.
                  closeConnection("initialize"); adjustTextareaHeight(messageInput);
                  log("Anonymous AI Chat Initialized");
                  connectionStatusText.textContent = ''; // Clear initial text
