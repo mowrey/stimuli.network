@@ -7,91 +7,138 @@
     <style>
         /* --- GitHub Dark Theme Styling --- */
         :root {
-            /* ... (All your color variables remain the same) ... */
+            /* Core Colors (GitHub Dark Dimmed Theme inspired) */
             --bg-primary: #22272e; /* Canvas background */
             --bg-secondary: #1c2128; /* Page background */
             --border-primary: #444c56;
-            --border-secondary: #373e47;
+            --border-secondary: #373e47; /* Slightly lighter border */
             --text-primary: #adbac7; /* Body text */
             --text-secondary: #768390; /* Muted text */
             --text-link: #539bf5; /* Link blue */
             --text-white: #f0f6fc; /* Brighter white text */
-            /* ... (Rest of the color variables) ... */
-             --border-radius: 6px;
+
+            /* Button Colors (Adapted for Dark) - ORIGINAL */
+            --btn-primary-bg: #347d39;
+            --btn-primary-hover-bg: #46954a;
+            --btn-primary-text: var(--text-white);
+            --btn-primary-border: rgba(197, 209, 217, 0.1);
+            --btn-primary-shadow: 0 0 transparent; /* Less shadow needed */
+            --btn-primary-inset-shadow: inset 0 0 transparent;
+
+            --btn-secondary-bg: #373e47;
+            --btn-secondary-hover-bg: #444c56;
+            --btn-secondary-text: var(--text-primary);
+            --btn-secondary-border: rgba(197, 209, 217, 0.1);
+            --btn-secondary-shadow: 0 0 transparent;
+            --btn-secondary-inset-shadow: inset 0 0 transparent;
+
+            --btn-danger-bg: #373e47;
+            --btn-danger-hover-bg: #c93c37; /* Red background on hover */
+            --btn-danger-text: #e5534b; /* Red text */
+            --btn-danger-hover-text: var(--text-white);
+            --btn-danger-border: rgba(197, 209, 217, 0.1);
+            --btn-danger-hover-border: rgba(197, 209, 217, 0.1);
+            --btn-danger-shadow: 0 0 transparent;
+            --btn-danger-inset-shadow: inset 0 0 transparent;
+
+             /* Button Disabled State - ORIGINAL */
+            --btn-disabled-bg: rgba(55, 62, 71, 0.6);
+            --btn-disabled-text: rgba(118, 131, 144, 0.7);
+            --btn-disabled-border: rgba(197, 209, 217, 0.1);
+
+            /* Input Fields */
+            --input-bg: var(--bg-secondary);
+            --input-border: var(--border-secondary);
+            --input-focus-border: var(--text-link);
+            --input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Blue focus ring */
+            --input-text: var(--text-primary);
+
+            /* Status/Alert Colors (Adjusted for Dark) */
+            --status-success-bg: rgba(52, 125, 57, 0.3);
+            --status-success-text: #56d364;
+            --status-success-border: rgba(86, 211, 100, 0.3);
+            --status-error-bg: rgba(201, 60, 55, 0.2);
+            --status-error-text: #e5534b;
+            --status-error-border: rgba(229, 83, 75, 0.3);
+            --status-connecting-bg: rgba(59, 130, 246, 0.2);
+            --status-connecting-text: #539bf5;
+            --status-connecting-border: rgba(83, 155, 245, 0.3);
+
+            /* Message Colors (Adjusted for Dark) */
+            --own-message-bg: #2d5986;
+            --own-message-text: var(--text-white);
+            --own-message-border: #376c9d;
+            --peer-message-bg: var(--bg-secondary);
+            --peer-message-text: var(--text-primary);
+            --peer-message-border: var(--border-secondary);
+            --system-message-color: var(--text-secondary);
+
+            /* Misc */
+            --border-radius: 6px;
         }
 
-        /* --- Layout Adjustments - MODIFIED --- */
-        html {
-            height: 100%;
-            /* overflow: hidden; <-- REMOVED */
-        }
+        /* --- Layout Adjustments - Footer Outside, Body Scroll Allowed --- */
+        html { height: 100%; }
         body {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-            display:flex; flex-direction:column; align-items:center; /* Center container horizontally */
-            min-height:100vh; /* Ensure body takes at least full viewport height */
-            padding: 0 24px; /* Horizontal padding */
-            background-color:var(--bg-secondary);
-            color:var(--text-primary); font-size:14px; line-height:1.5;
-            box-sizing:border-box; margin: 0;
-            /* overflow: hidden; <-- REMOVED */
+            display:flex; flex-direction:column; align-items:center;
+            min-height:100vh; padding: 0 24px; background-color:var(--bg-secondary);
+            color:var(--text-primary); font-size:14px; line-height:1.5; box-sizing:border-box; margin: 0;
         }
         .container {
             width:100%; max-width:720px; background:var(--bg-primary); border-radius:var(--border-radius);
-            border:1px solid var(--border-primary);
-            display:flex; flex-direction:column; /* Internal flex layout */
-            /* flex-grow: 1; <-- Optional, might push footer down too much */
-            flex-shrink: 1; /* Allow shrinking if needed */
-            /* height: 0; <-- REMOVED */
-            min-height: 400px; /* Minimum height for the container */
-            max-height: calc(100vh - 48px - 50px); /* Example: Try limiting height to leave ~50px for footer + body margin */
-            overflow: hidden; /* Container itself hides overflow, children handle scroll */
-            margin: 24px 0; /* Vertical margin for spacing */
-            /* Container's children will manage scrolling */
+            border:1px solid var(--border-primary); display:flex; flex-direction:column;
+            flex-shrink: 1; min-height: 400px;
+            max-height: calc(100vh - 48px - 50px); /* Adjust 50px based on footer height + desired gap */
+            overflow: hidden; margin: 24px 0;
         }
          /* --- End Layout Adjustments --- */
 
         .header {padding:16px 24px;border-bottom:1px solid var(--border-primary);text-align:center;background-color:var(--bg-primary);flex-shrink:0}
         .header h2 {margin:0;font-size:1.35em;font-weight:600;color:var(--text-primary)}.header .brand {color:var(--text-link);font-weight:600}
         .content-area {
-            padding: 24px;
-            display:flex; flex-direction:column; /* Stack content vertically */
-            flex-grow:1; /* Take remaining space *within* container */
-            overflow-y: auto; /* Allow content area itself to scroll */
-             -webkit-overflow-scrolling: touch; /* Momentum scroll on iOS */
-             min-height: 0; /* Allow shrinking within flex container */
+            padding: 24px; display:flex; flex-direction:column; flex-grow:1;
+            overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0;
         }
+        textarea {
+            width: 100%; box-sizing: border-box; min-height: 70px; margin-bottom: 10px; padding: 8px 12px;
+            border: 1px solid var(--input-border); border-radius: var(--border-radius); font-family: inherit;
+            font-size: 1em; resize: vertical; background-color: var(--input-bg); box-shadow: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; color: var(--input-text);
+        }
+        textarea:focus {outline:none;border-color:var(--input-focus-border);box-shadow:var(--input-focus-shadow)}
+        input::placeholder,textarea::placeholder {color:var(--text-secondary)}
 
-        /* --- (Rest of your component styles: textarea, button, chat, etc. remain the same) --- */
-        textarea { width: 100%; box-sizing: border-box; min-height: 70px; margin-bottom: 10px; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--border-radius); font-family: inherit; font-size: 1em; resize: vertical; background-color: var(--input-bg); box-shadow: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; color: var(--input-text); }
-        textarea:focus { outline:none;border-color:var(--input-focus-border);box-shadow:var(--input-focus-shadow) }
-        input::placeholder,textarea::placeholder { color:var(--text-secondary) }
-        button { position:relative;display:inline-block;padding:5px 16px;font-size:14px;font-weight:500;line-height:20px;white-space:nowrap;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;border:1px solid var(--btn-primary-border);border-radius:var(--border-radius);appearance:none;transition:background-color .2s cubic-bezier(.3,0,.5,1),border-color .2s ease;margin-right:8px;margin-bottom:10px;text-align:center;background-color:var(--btn-primary-bg);color:var(--btn-primary-text);box-shadow:var(--btn-primary-shadow),var(--btn-primary-inset-shadow) }
-        button:hover:not(:disabled) { background-color:var(--btn-primary-hover-bg);text-decoration:none;transition-duration:.1s }
-        button:active:not(:disabled) { background-color:var(--btn-primary-hover-bg);box-shadow:none;transition:none }
-        button:disabled { color:var(--btn-disabled-text);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border);cursor:not-allowed;box-shadow:none }
-        button.secondary { color:var(--btn-secondary-text);background-color:var(--btn-secondary-bg);border-color:var(--btn-secondary-border);box-shadow:var(--btn-secondary-shadow),var(--btn-secondary-inset-shadow) }
-        button.secondary:hover:not(:disabled) { background-color:var(--btn-secondary-hover-bg);border-color:var(--btn-secondary-border) }
-        button.secondary:disabled { color:var(--btn-disabled-text);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border) }
-        button.disconnect { color:var(--btn-danger-text);background-color:var(--btn-danger-bg);border-color:var(--btn-danger-border);box-shadow:var(--btn-danger-shadow),var(--btn-danger-inset-shadow) }
-        button.disconnect:hover:not(:disabled) { background-color:var(--btn-danger-hover-bg);color:var(--btn-danger-hover-text);border-color:var(--btn-danger-hover-border) }
-        button.disconnect:disabled { color:rgba(229,83,75,.7);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border) }
-        #chat-interface { display:flex;flex-direction:column;flex-grow:1; min-height: 0; }
-        #chat-area-wrapper { display:flex;flex-direction:column;flex-grow:1;overflow:hidden;margin-top:20px;border:1px solid var(--border-primary);border-radius:var(--border-radius);background-color:var(--bg-primary) }
-        #chat-log { flex-grow:1;overflow-y:auto;padding:16px;font-size:1em;display:flex;flex-direction:column; min-height: 100px; }
-        #chat-log-inner { display:flex;flex-direction:column;gap:12px }
-        #chat-log .message { padding:8px 12px;border-radius:var(--border-radius);max-width:80%;word-wrap:break-word;line-height:1.5;border:1px solid transparent;position:relative;display:flex;flex-direction:column }
-        #chat-log .own { background-color:var(--own-message-bg);color:var(--own-message-text);border-color:var(--own-message-border);align-self:flex-end;margin-left:auto;border-bottom-right-radius:0 }
-        #chat-log .peer { background-color:var(--peer-message-bg);color:var(--peer-message-text);border-color:var(--peer-message-border);align-self:flex-start;margin-right:auto;border-bottom-left-radius:0 }
-        #chat-log .system { font-size:.9em;text-align:center;color:var(--system-message-color);background:0 0;align-self:center;padding:8px 0;width:100%;border:none;max-width:100% }
-        #message-input-container { display:flex;padding:8px 16px;border-top:1px solid var(--border-primary);background-color:var(--bg-primary);align-items:flex-end;flex-shrink:0;gap:8px }
+        /* --- ORIGINAL BUTTON STYLES --- */
+        button {position:relative;display:inline-block;padding:5px 16px;font-size:14px;font-weight:500;line-height:20px;white-space:nowrap;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;border:1px solid var(--btn-primary-border);border-radius:var(--border-radius);appearance:none;transition:background-color .2s cubic-bezier(.3,0,.5,1),border-color .2s ease;margin-right:8px;margin-bottom:10px;text-align:center;background-color:var(--btn-primary-bg);color:var(--btn-primary-text);box-shadow:var(--btn-primary-shadow),var(--btn-primary-inset-shadow)}
+        button:hover:not(:disabled) {background-color:var(--btn-primary-hover-bg);text-decoration:none;transition-duration:.1s}
+        button:active:not(:disabled) {background-color:var(--btn-primary-hover-bg);box-shadow:none;transition:none}
+        button:disabled {color:var(--btn-disabled-text);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border);cursor:not-allowed;box-shadow:none}
+        button.secondary {color:var(--btn-secondary-text);background-color:var(--btn-secondary-bg);border-color:var(--btn-secondary-border);box-shadow:var(--btn-secondary-shadow),var(--btn-secondary-inset-shadow)}
+        button.secondary:hover:not(:disabled) {background-color:var(--btn-secondary-hover-bg);border-color:var(--btn-secondary-border)}
+        button.secondary:disabled {color:var(--btn-disabled-text);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border)}
+        button.disconnect {color:var(--btn-danger-text);background-color:var(--btn-danger-bg);border-color:var(--btn-danger-border);box-shadow:var(--btn-danger-shadow),var(--btn-danger-inset-shadow)}
+        button.disconnect:hover:not(:disabled) {background-color:var(--btn-danger-hover-bg);color:var(--btn-danger-hover-text);border-color:var(--btn-danger-hover-border)}
+        button.disconnect:disabled {color:rgba(229,83,75,.7);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border)}
+        /* --- END ORIGINAL BUTTON STYLES --- */
+
+        #chat-interface {display:flex;flex-direction:column;flex-grow:1; min-height: 0;}
+        #chat-area-wrapper {display:flex;flex-direction:column;flex-grow:1;overflow:hidden;margin-top:20px;border:1px solid var(--border-primary);border-radius:var(--border-radius);background-color:var(--bg-primary)}
+        #chat-log {flex-grow:1;overflow-y:auto;padding:16px;font-size:1em;display:flex;flex-direction:column; min-height: 100px;}
+        #chat-log-inner {display:flex;flex-direction:column;gap:12px}
+        #chat-log .message {padding:8px 12px;border-radius:var(--border-radius);max-width:80%;word-wrap:break-word;line-height:1.5;border:1px solid transparent;position:relative;display:flex;flex-direction:column}
+        #chat-log .own {background-color:var(--own-message-bg);color:var(--own-message-text);border-color:var(--own-message-border);align-self:flex-end;margin-left:auto;border-bottom-right-radius:0}
+        #chat-log .peer {background-color:var(--peer-message-bg);color:var(--peer-message-text);border-color:var(--peer-message-border);align-self:flex-start;margin-right:auto;border-bottom-left-radius:0}
+        #chat-log .system {font-size:.9em;text-align:center;color:var(--system-message-color);background:0 0;align-self:center;padding:8px 0;width:100%;border:none;max-width:100%}
+        #message-input-container {display:flex;padding:8px 16px;border-top:1px solid var(--border-primary);background-color:var(--bg-primary);align-items:flex-end;flex-shrink:0;gap:8px}
         #message-input { flex-grow: 1; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--border-radius); margin-right: 8px; font-size: 1em; font-family: inherit; resize: none; background-color: var(--input-bg); line-height: 1.5; min-height: 34px; height: auto; overflow-y: hidden; color: var(--input-text); margin-bottom: 0; }
         #message-input:focus { outline: none; border-color: var(--input-focus-border); box-shadow: var(--input-focus-shadow); }
-        #send-btn { margin:0;flex-shrink:0;align-self:flex-end }
-        #status { font-weight:500;padding:10px 16px;font-size:1em;text-align:center;margin-bottom:24px;border-radius:var(--border-radius);border:1px solid transparent;transition:background-color .3s ease,color .3s ease,border-color .3s ease; flex-shrink: 0; }
-        .status-disconnected { background-color:var(--status-error-bg);color:var(--status-error-text);border-color:var(--status-error-border) }
-        .status-connecting { background-color:var(--status-connecting-bg);color:var(--status-connecting-text);border-color:var(--status-connecting-border) }
-        .status-connected { background-color:var(--status-success-bg);color:var(--status-success-text);border-color:var(--status-success-border) }
-        .hidden { display:none!important }
+        #send-btn {margin:0;flex-shrink:0;align-self:flex-end; margin-bottom: 0;} /* Ensure send button aligns with textarea */
+        #status {font-weight:500;padding:10px 16px;font-size:1em;text-align:center;margin-bottom:24px;border-radius:var(--border-radius);border:1px solid transparent;transition:background-color .3s ease,color .3s ease,border-color .3s ease; flex-shrink: 0;}
+        .status-disconnected {background-color:var(--status-error-bg);color:var(--status-error-text);border-color:var(--status-error-border)}
+        .status-connecting {background-color:var(--status-connecting-bg);color:var(--status-connecting-text);border-color:var(--status-connecting-border)}
+        .status-connected {background-color:var(--status-success-bg);color:var(--status-success-text);border-color:var(--status-success-border)}
+        .hidden {display:none!important}
         label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9em; color: var(--text-primary); }
         #signaling { border: none; padding: 0; border-radius: 0; margin-top: 0; background-color: transparent; flex-shrink: 0; }
         #signaling h3 { font-size: 1.2em; font-weight: 600; margin-top: 0; margin-bottom: 8px; color: var(--text-primary); text-align: center; padding-bottom: 8px; border-bottom: 1px solid var(--border-secondary); }
@@ -101,24 +148,17 @@
         .step:first-of-type { border-top: none; padding-top: 0; margin-top: 16px; }
         .step p { font-size: 0.85em; color: var(--text-secondary); margin-top: 6px; margin-bottom: 0; text-align: left; }
 
-
         /* --- Footer Styling (Outside Container) --- */
         footer {
-            text-align: center;
-            padding: 16px 24px; /* Add padding */
-            font-size: .85em;
-            color: var(--text-secondary);
-            width: 100%; /* Take full width */
-            box-sizing: border-box; /* Include padding in width */
-            border-top: 1px solid var(--border-primary);
-            margin-top: auto; /* Push footer down if body content is short */
-            flex-shrink: 0; /* Prevent footer from shrinking */
-            background-color: var(--bg-secondary); /* Match body background */
+            text-align: center; padding: 16px 24px; font-size: .85em;
+            color: var(--text-secondary); width: 100%; box-sizing: border-box;
+            border-top: 1px solid var(--border-primary); margin-top: auto;
+            flex-shrink: 0; background-color: var(--bg-secondary);
         }
 
     </style>
 </head>
-<body> <!-- Body is the main flex container now -->
+<body>
 
     <!-- Main Content Container -->
     <div class="container">
@@ -169,18 +209,15 @@
                  </div>
                  <button id="disconnect-btn" class="disconnect" style="margin: 20px auto 0; display: block; width: auto; flex-shrink: 0;">Disconnect</button>
             </div>
-
-            <!-- Footer is NOT inside content-area -->
-
         </div> <!-- End content-area -->
     </div> <!-- End container -->
 
     <!-- Footer is now a sibling of .container, direct child of body -->
     <footer>
-        Stimuli Network • AI-Generated • P2P Chat
+        Stimuli Network • P2P Chat
     </footer>
 
-    <!-- JavaScript remains exactly the same -->
+    <!-- JavaScript remains the same -->
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             // --- DOM Elements ---
@@ -228,9 +265,8 @@
                 const msgDiv = document.createElement('div');
                 msgDiv.textContent = text;
                 msgDiv.className = `message ${sender}`;
-                const shouldScroll = chatLog.scrollTop + chatLog.clientHeight >= chatLog.scrollHeight - 50; // Check if near bottom before adding
+                const shouldScroll = chatLog.scrollTop + chatLog.clientHeight >= chatLog.scrollHeight - 50;
                 chatLogInner.appendChild(msgDiv);
-                // Scroll internal chat log if user was near the bottom
                 if (shouldScroll) {
                     chatLog.scrollTop = chatLog.scrollHeight;
                 }
@@ -245,7 +281,7 @@
                  if(acceptAnswerBtn) acceptAnswerBtn.disabled = true;
                  if(createOfferBtn) createOfferBtn.disabled = false;
                  if(messageInput) { messageInput.value = ''; messageInput.style.height = 'auto'; adjustTextareaHeight(messageInput); }
-                 if(chatLogInner) chatLogInner.innerHTML = ''; // Clear log on full disconnect
+                 if(chatLogInner) chatLogInner.innerHTML = '';
             }
 
             function closeConnection(triggeredBy = "unknown") {
@@ -268,7 +304,6 @@
                  const currentStatusType = statusDiv ? statusDiv.className.split(' ').pop().replace('status-', '') : 'disconnected';
                  if (currentStatusType !== 'disconnected' || connectionWasOpen) {
                       updateStatus('Disconnected', 'disconnected');
-                      // Avoid duplicate system message if triggered by disconnect button which adds its own
                       if (triggeredBy !== 'disconnect_button') {
                         displayMessage("Connection closed.", "system");
                       }
@@ -299,7 +334,7 @@
                      peerConnection.onicecandidate = (e) => {
                          if (!peerConnection || peerConnection.signalingState === 'closed' || !e.candidate) {
                              setTimeout(() => {
-                                 if (peerConnection?.localDescription?.sdp && copyArea.value.startsWith("Gathering")) {
+                                 if (peerConnection?.localDescription?.sdp && (copyArea.value === "" || copyArea.value.startsWith("Gathering"))) { // Check if empty or gathering
                                      try {
                                          copyArea.value = JSON.stringify(peerConnection.localDescription);
                                          copyBtn.disabled = false;
@@ -313,6 +348,11 @@
                                      logError("ICE gathering finished but localDescription.sdp is missing.");
                                      copyArea.value = "Error: SDP generation failed.";
                                      copyBtn.disabled = true;
+                                 } else {
+                                    // SDP might already be populated if ICE finished quickly
+                                    if (peerConnection?.localDescription?.sdp) {
+                                        copyBtn.disabled = false;
+                                    }
                                  }
                              }, 100);
                          }
@@ -327,11 +367,8 @@
                                      updateStatus("Connecting P2P...", 'connecting');
                                 }
                                 break;
-                             case "connected":
-                                break;
-                             case "disconnected":
-                             case "failed":
-                             case "closed":
+                             case "connected": break; // Handled by DC open
+                             case "disconnected": case "failed": case "closed":
                                   logError(`PC state leads to closure: ${state}`);
                                   closeConnection(`connectionstatechange_${state}`);
                                   break;
@@ -348,198 +385,62 @@
             }
 
             async function createOfferHandler() {
-                 closeConnection("createOfferHandler_start");
-                 isOfferer = true;
-                 updateStatus("Initializing...", 'connecting');
-                 if (!createPeerConnection()) { return; }
-                 if (!peerConnection) { logError("PC null immediately after createPeerConnection success."); updateStatus("Internal Error", "disconnected"); return; }
+                 closeConnection("createOfferHandler_start"); isOfferer = true; updateStatus("Initializing...", 'connecting');
+                 if (!createPeerConnection()) { return; } if (!peerConnection) { logError("PC null immediately after createPeerConnection success."); updateStatus("Internal Error", "disconnected"); return; }
                  try {
-                     log("Creating Data Channel (offerer)");
-                     dataChannel = peerConnection.createDataChannel('chat', { reliable: true });
-                     setupDataChannelEvents(dataChannel);
-                     log("Creating Offer");
-                     const offer = await peerConnection.createOffer();
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during offer creation."); return; }
-                     log("Setting Local Description (Offer)");
-                     await peerConnection.setLocalDescription(offer);
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription."); return; }
-                     copyArea.value = "Gathering ICE candidates...";
-                     copyBtn.disabled = true;
-                     updateStatus("Offer Created. Copy & send when ready.", 'connecting');
-                     createOfferBtn.disabled = true;
-                     answerPasteArea.disabled = false;
-                     acceptAnswerBtn.disabled = false;
-                     offerPasteArea.disabled = true;
-                     createAnswerBtn.disabled = true;
-                 } catch (err) {
-                     logError("Offer creation/setting failed", err);
-                     closeConnection("offer_fail_exception");
-                 }
+                     log("Creating Data Channel (offerer)"); dataChannel = peerConnection.createDataChannel('chat', { reliable: true }); setupDataChannelEvents(dataChannel);
+                     log("Creating Offer"); const offer = await peerConnection.createOffer(); if (!peerConnection || peerConnection.signalingState === 'closed') return;
+                     log("Setting Local Description (Offer)"); await peerConnection.setLocalDescription(offer); if (!peerConnection || peerConnection.signalingState === 'closed') return;
+                     copyArea.value = "Gathering ICE candidates..."; copyBtn.disabled = true; updateStatus("Offer Created. Copy & send when ready.", 'connecting');
+                     createOfferBtn.disabled = true; answerPasteArea.disabled = false; acceptAnswerBtn.disabled = false; offerPasteArea.disabled = true; createAnswerBtn.disabled = true;
+                 } catch (err) { logError("Offer creation/setting failed", err); closeConnection("offer_fail_exception"); }
             }
 
             async function createAnswerHandler() {
-                 const offerText = offerPasteArea.value.trim();
-                 if (!offerText) { alert("Please paste the Offer message first."); return; }
-                 closeConnection("createAnswerHandler_start");
-                 isOfferer = false;
-                 updateStatus("Initializing...", 'connecting');
-                 let offer;
+                 const offerText = offerPasteArea.value.trim(); if (!offerText) { alert("Please paste the Offer message first."); return; }
+                 closeConnection("createAnswerHandler_start"); isOfferer = false; updateStatus("Initializing...", 'connecting');
+                 let offer; try { offer = JSON.parse(offerText); if (offer.type !== 'offer') throw new Error("Not an offer."); } catch (err) { logError("Invalid Offer JSON or type", err); alert("Invalid Offer message."); updateStatus("Invalid Offer", "disconnected"); closeConnection("answer_invalid_json"); return; }
+                 if (!createPeerConnection()) { return; } if (!peerConnection) { logError("PC null after createPeerConnection success (answer)."); updateStatus("Internal Error", "disconnected"); return; }
                  try {
-                     offer = JSON.parse(offerText);
-                     if (offer.type !== 'offer') { throw new Error("Parsed JSON is not an offer."); }
-                 } catch (err) {
-                     logError("Invalid Offer JSON or type", err);
-                     alert("Invalid Offer message. Please paste the complete Offer JSON.");
-                     updateStatus("Invalid Offer", "disconnected");
-                     closeConnection("answer_invalid_json");
-                     return;
-                 }
-                 if (!createPeerConnection()) { return; }
-                 if (!peerConnection) { logError("PC null after createPeerConnection success (answer)."); updateStatus("Internal Error", "disconnected"); return; }
-                 try {
-                     log("Setting Remote Description (Offer)");
-                     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setRemoteDescription (offer)."); return; }
-                     log("Creating Answer");
-                     const answer = await peerConnection.createAnswer();
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during createAnswer."); return; }
-                     log("Setting Local Description (Answer)");
-                     await peerConnection.setLocalDescription(answer);
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription (answer)."); return; }
-                     copyArea.value = "Gathering ICE candidates...";
-                     copyBtn.disabled = true;
-                     updateStatus("Answer Created. Copy & send back when ready.", 'connecting');
-                     createAnswerBtn.disabled = true;
-                     offerPasteArea.disabled = true;
-                     createOfferBtn.disabled = true;
-                     answerPasteArea.disabled = true;
-                     acceptAnswerBtn.disabled = true;
-                 } catch (err) {
-                     logError("Answer creation/setting failed", err);
-                     closeConnection("answer_fail_exception");
-                 }
+                     log("Setting Remote Description (Offer)"); await peerConnection.setRemoteDescription(new RTCSessionDescription(offer)); if (!peerConnection || peerConnection.signalingState === 'closed') return;
+                     log("Creating Answer"); const answer = await peerConnection.createAnswer(); if (!peerConnection || peerConnection.signalingState === 'closed') return;
+                     log("Setting Local Description (Answer)"); await peerConnection.setLocalDescription(answer); if (!peerConnection || peerConnection.signalingState === 'closed') return;
+                     copyArea.value = "Gathering ICE candidates..."; copyBtn.disabled = true; updateStatus("Answer Created. Copy & send back when ready.", 'connecting');
+                     createAnswerBtn.disabled = true; offerPasteArea.disabled = true; createOfferBtn.disabled = true; answerPasteArea.disabled = true; acceptAnswerBtn.disabled = true;
+                 } catch (err) { logError("Answer creation/setting failed", err); closeConnection("answer_fail_exception"); }
             }
 
             async function acceptAnswerHandler() {
-                 if (!isOfferer) { logError("acceptAnswer called but not offerer."); return; }
-                 const answerText = answerPasteArea.value.trim();
-                 if (!answerText) { alert("Please paste the Answer message first."); return; }
-                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') {
-                     logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`);
-                     alert("Invalid state. Please create an offer first or check connection status.");
-                     updateStatus("Invalid State for Accept", "disconnected");
-                     return;
-                 }
-                 let answer;
+                 if (!isOfferer) return; const answerText = answerPasteArea.value.trim(); if (!answerText) { alert("Please paste the Answer message first."); return; }
+                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') { logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`); alert("Invalid state."); updateStatus("Invalid State for Accept", "disconnected"); return; }
+                 let answer; try { answer = JSON.parse(answerText); if (answer.type !== 'answer') throw new Error("Not an answer."); } catch (err) { logError("Invalid Answer JSON or type", err); alert("Invalid Answer message."); updateStatus("Invalid Answer", "disconnected"); return; }
                  try {
-                     answer = JSON.parse(answerText);
-                     if (answer.type !== 'answer') { throw new Error("Parsed JSON is not an answer."); }
-                 } catch (err) {
-                     logError("Invalid Answer JSON or type", err);
-                     alert("Invalid Answer message. Please paste the complete Answer JSON.");
-                     updateStatus("Invalid Answer", "disconnected");
-                     return;
-                 }
-                 try {
-                     log("Setting Remote Description (Answer)");
-                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setRemoteDescription (answer)."); return; }
-                     updateStatus("Connecting P2P...", 'connecting');
-                     answerPasteArea.disabled = true;
-                     acceptAnswerBtn.disabled = true;
-                 } catch (err) {
-                     logError("Set Remote Description (Answer) failed", err);
-                     closeConnection("accept_fail_exception");
-                 }
+                     log("Setting Remote Description (Answer)"); await peerConnection.setRemoteDescription(new RTCSessionDescription(answer)); if (!peerConnection || peerConnection.signalingState === 'closed') return;
+                     updateStatus("Connecting P2P...", 'connecting'); answerPasteArea.disabled = true; acceptAnswerBtn.disabled = true;
+                 } catch (err) { logError("Set Remote Description (Answer) failed", err); closeConnection("accept_fail_exception"); }
             }
 
             function copyHandler() {
-                 if (copyArea.value && !copyBtn.disabled) {
-                     navigator.clipboard.writeText(copyArea.value).then(() => {
-                         const originalText = copyBtn.textContent;
-                         copyBtn.textContent = 'Copied!';
-                         setTimeout(() => { copyBtn.textContent = originalText; }, 1500);
-                     }).catch(err => {
-                         logError('Copy failed: ', err);
-                         alert('Could not copy message to clipboard.');
-                     });
-                 }
+                 if (copyArea.value && !copyBtn.disabled) { navigator.clipboard.writeText(copyArea.value).then(() => { const o = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = o; }, 1500); }).catch(err => { logError('Copy failed: ', err); alert('Could not copy.'); }); }
             }
 
             function sendHandler() {
-                 const msg = messageInput.value.trim();
-                 if (!msg) return;
-                 if (dataChannel && dataChannel.readyState === 'open') {
-                     try {
-                         dataChannel.send(msg);
-                         displayMessage(msg, 'own');
-                         messageInput.value = '';
-                         messageInput.focus();
-                         adjustTextareaHeight(messageInput);
-                     } catch (e) {
-                         logError("Send DataChannel error", e);
-                         displayMessage("Error sending message. Connection may be closing.", "system");
-                         closeConnection("send_error_exception");
-                     }
-                 } else {
-                     logError(`Send attempt failed. DataChannel state: ${dataChannel?.readyState}`);
-                     displayMessage("Cannot send message. Not connected.", "system");
-                     if(!dataChannel || ['closing', 'closed'].includes(dataChannel.readyState)) {
-                        closeConnection("send_attempt_chan_closed");
-                     }
-                 }
+                 const msg = messageInput.value.trim(); if (!msg) return;
+                 if (dataChannel && dataChannel.readyState === 'open') { try { dataChannel.send(msg); displayMessage(msg, 'own'); messageInput.value = ''; messageInput.focus(); adjustTextareaHeight(messageInput); } catch (e) { logError("Send DataChannel error", e); displayMessage("Error sending message.", "system"); closeConnection("send_error_exception"); } }
+                 else { logError(`Send attempt failed. DC state: ${dataChannel?.readyState}`); displayMessage("Not connected.", "system"); if(!dataChannel || ['closing', 'closed'].includes(dataChannel.readyState)) closeConnection("send_attempt_chan_closed"); }
             }
-            function disconnectHandler() {
-                displayMessage("Disconnecting...", "system");
-                closeConnection("disconnect_button");
-            }
+            function disconnectHandler() { displayMessage("Disconnecting...", "system"); closeConnection("disconnect_button"); }
 
-            function offerPasteHandler() {
-                const txt = offerPasteArea.value.trim();
-                createAnswerBtn.disabled = !txt || createOfferBtn.disabled;
-                if (txt && createOfferBtn) createOfferBtn.disabled = true;
-                if (!txt && !isOfferer) createOfferBtn.disabled = false;
-            }
-            function answerPasteHandler() {
-                const txt = answerPasteArea.value.trim();
-                acceptAnswerBtn.disabled = !(txt && isOfferer && peerConnection?.signalingState === 'have-local-offer');
-            }
-            function adjustTextareaHeight(el) {
-                if (!el) return;
-                el.style.height = 'auto';
-                const maxHeight = 150;
-                const scrollHeight = el.scrollHeight;
-                const newHeight = Math.min(scrollHeight, maxHeight);
-                el.style.height = newHeight + 'px';
-                el.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
-            }
-            function messageInputHandler(e) {
-                if (e && e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendHandler();
-                } else {
-                    adjustTextareaHeight(messageInput);
-                }
-            }
+            function offerPasteHandler() { const txt = offerPasteArea.value.trim(); createAnswerBtn.disabled = !txt || createOfferBtn.disabled; if (txt && createOfferBtn) createOfferBtn.disabled = true; if (!txt && !isOfferer) createOfferBtn.disabled = false; }
+            function answerPasteHandler() { const txt = answerPasteArea.value.trim(); acceptAnswerBtn.disabled = !(txt && isOfferer && peerConnection?.signalingState === 'have-local-offer'); }
+            function adjustTextareaHeight(el) { if (!el) return; el.style.height='auto'; const maxH=150; const scrollH=el.scrollHeight; const newH=Math.min(scrollH, maxH); el.style.height=newH+'px'; el.style.overflowY=scrollH>maxH?'auto':'hidden'; }
+            function messageInputHandler(e) { if (e && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendHandler(); } else { adjustTextareaHeight(messageInput); } }
 
             function initialize() {
-                 if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !copyBtn || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) {
-                     logError("DOM Initialization Failed! One or more required elements not found.");
-                     document.body.innerHTML = `<div style="padding: 30px; color: red; font-family: sans-serif;"><h1>Initialization Error</h1><p>Could not find all necessary HTML elements. Please check the console for details and ensure element IDs match the script.</p></div>`;
-                     return;
-                 }
-                 createOfferBtn.onclick = createOfferHandler;
-                 createAnswerBtn.onclick = createAnswerHandler;
-                 acceptAnswerBtn.onclick = acceptAnswerHandler;
-                 copyBtn.onclick = copyHandler;
-                 sendBtn.onclick = sendHandler;
-                 disconnectBtn.onclick = disconnectHandler;
-                 offerPasteArea.oninput = offerPasteHandler;
-                 answerPasteArea.oninput = answerPasteHandler;
-                 messageInput.onkeydown = messageInputHandler;
-                 messageInput.oninput = () => adjustTextareaHeight(messageInput);
-                 closeConnection("initialize");
-                 adjustTextareaHeight(messageInput);
+                 if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !copyBtn || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) { logError("DOM Init Failed!"); document.body.innerHTML = `...Error Message...`; return; }
+                 createOfferBtn.onclick = createOfferHandler; createAnswerBtn.onclick = createAnswerHandler; acceptAnswerBtn.onclick = acceptAnswerHandler; copyBtn.onclick = copyHandler; sendBtn.onclick = sendHandler; disconnectBtn.onclick = disconnectHandler;
+                 offerPasteArea.oninput = offerPasteHandler; answerPasteArea.oninput = answerPasteHandler; messageInput.onkeydown = messageInputHandler; messageInput.oninput = () => adjustTextareaHeight(messageInput);
+                 closeConnection("initialize"); adjustTextareaHeight(messageInput);
                  log("P2P Chat Initialized");
             }
             initialize();
