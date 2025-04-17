@@ -22,7 +22,7 @@
             --btn-primary-hover-bg: #46954a;
             --btn-primary-text: var(--text-white);
             --btn-primary-border: rgba(197, 209, 217, 0.1);
-            --btn-primary-shadow: 0 0 transparent; /* Less shadow needed */
+            --btn-primary-shadow: 0 0 transparent;
             --btn-primary-inset-shadow: inset 0 0 transparent;
 
             --btn-secondary-bg: #373e47;
@@ -33,8 +33,8 @@
             --btn-secondary-inset-shadow: inset 0 0 transparent;
 
             --btn-danger-bg: #373e47;
-            --btn-danger-hover-bg: #c93c37; /* Red background on hover */
-            --btn-danger-text: #e5534b; /* Red text */
+            --btn-danger-hover-bg: #c93c37;
+            --btn-danger-text: #e5534b;
             --btn-danger-hover-text: var(--text-white);
             --btn-danger-border: rgba(197, 209, 217, 0.1);
             --btn-danger-hover-border: rgba(197, 209, 217, 0.1);
@@ -50,7 +50,7 @@
             --input-bg: var(--bg-secondary);
             --input-border: var(--border-secondary);
             --input-focus-border: var(--text-link);
-            --input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Blue focus ring */
+            --input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
             --input-text: var(--text-primary);
 
             /* Status/Alert Colors (Adjusted for Dark) */
@@ -133,7 +133,7 @@
         #message-input-container {display:flex;padding:8px 16px;border-top:1px solid var(--border-primary);background-color:var(--bg-primary);align-items:flex-end;flex-shrink:0;gap:8px}
         #message-input { flex-grow: 1; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--border-radius); margin-right: 8px; font-size: 1em; font-family: inherit; resize: none; background-color: var(--input-bg); line-height: 1.5; min-height: 34px; height: auto; overflow-y: hidden; color: var(--input-text); margin-bottom: 0; }
         #message-input:focus { outline: none; border-color: var(--input-focus-border); box-shadow: var(--input-focus-shadow); }
-        #send-btn {margin:0;flex-shrink:0;align-self:flex-end; margin-bottom: 0;} /* Align with textarea */
+        #send-btn {margin:0;flex-shrink:0;align-self:flex-end; margin-bottom: 0;}
         #status {font-weight:500;padding:10px 16px;font-size:1em;text-align:center;margin-bottom:24px;border-radius:var(--border-radius);border:1px solid transparent;transition:background-color .3s ease,color .3s ease,border-color .3s ease; flex-shrink: 0;}
         .status-disconnected {background-color:var(--status-error-bg);color:var(--status-error-text);border-color:var(--status-error-border)}
         .status-connecting {background-color:var(--status-connecting-bg);color:var(--status-connecting-text);border-color:var(--status-connecting-border)}
@@ -217,7 +217,7 @@
         Stimuli Network • Anonymous-AI Chat
     </footer>
 
-    <!-- JavaScript with UPDATED copyHandler -->
+    <!-- JavaScript with reduced comments -->
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             // --- DOM Elements ---
@@ -265,8 +265,10 @@
                 const msgDiv = document.createElement('div');
                 msgDiv.textContent = text;
                 msgDiv.className = `message ${sender}`;
+                // Determine if user is scrolled near the bottom before appending
                 const shouldScroll = chatLog.scrollTop + chatLog.clientHeight >= chatLog.scrollHeight - 50;
                 chatLogInner.appendChild(msgDiv);
+                // Scroll down only if user was already near the bottom
                 if (shouldScroll) {
                     chatLog.scrollTop = chatLog.scrollHeight;
                 }
@@ -276,7 +278,7 @@
                  if(copyArea) copyArea.value = '';
                  if(offerPasteArea) { offerPasteArea.value = ''; offerPasteArea.disabled = false; }
                  if(answerPasteArea) { answerPasteArea.value = ''; answerPasteArea.disabled = false; }
-                 if(copyBtn) { copyBtn.disabled = true; copyBtn.textContent = 'Copy Message'; } // Reset text too
+                 if(copyBtn) { copyBtn.disabled = true; copyBtn.textContent = 'Copy Message'; }
                  if(createAnswerBtn) createAnswerBtn.disabled = true;
                  if(acceptAnswerBtn) acceptAnswerBtn.disabled = true;
                  if(createOfferBtn) createOfferBtn.disabled = false;
@@ -302,6 +304,7 @@
                 resetUIForDisconnect();
 
                  const currentStatusType = statusDiv ? statusDiv.className.split(' ').pop().replace('status-', '') : 'disconnected';
+                 // Update status and optionally show system message only if connection was actually open or status wasn't already disconnected
                  if (currentStatusType !== 'disconnected' || connectionWasOpen) {
                       updateStatus('Disconnected', 'disconnected');
                       if (triggeredBy !== 'disconnect_button') {
@@ -317,7 +320,12 @@
 
             function setupDataChannelEvents(channel) {
                 if (!channel) { logError("setupDataChannelEvents: null channel"); return; }
-                channel.onopen = () => { updateStatus("Connected", 'connected'); displayMessage("Chat connected!", "system"); if (messageInput) messageInput.focus(); chatLog.scrollTop = chatLog.scrollHeight; };
+                channel.onopen = () => {
+                    updateStatus("Connected", 'connected');
+                    displayMessage("Chat connected!", "system");
+                    if (messageInput) messageInput.focus();
+                    chatLog.scrollTop = chatLog.scrollHeight;
+                };
                 channel.onclose = () => { closeConnection("dataChannel.onclose"); };
                 channel.onerror = (e) => { logError("Data channel error", e); closeConnection("dataChannel.onerror"); };
                 channel.onmessage = (e) => { displayMessage(e.data, 'peer'); };
@@ -331,17 +339,18 @@
                  log("Creating new PC");
                  try {
                      peerConnection = new RTCPeerConnection(rtcConfig);
+
+                     // Event: ICE Candidate generated
                      peerConnection.onicecandidate = (e) => {
-                         // Use a timeout to ensure SDP is definitely available after gathering finishes
+                         // Use a timeout to ensure SDP is definitely available after gathering finishes (when e.candidate is null)
                          if (!peerConnection || peerConnection.signalingState === 'closed' || !e.candidate) {
                              setTimeout(() => {
-                                // Check PC still exists and state is appropriate before updating
-                                if (peerConnection && ['have-local-offer', 'have-remote-offer', 'stable'].includes(peerConnection.signalingState)) {
-                                     if (peerConnection.localDescription?.sdp && (copyArea.value === "" || copyArea.value.startsWith("Gathering"))) {
+                                if (peerConnection && ['have-local-offer', 'have-remote-offer', 'stable'].includes(peerConnection.signalingState) && peerConnection.localDescription) {
+                                     if (peerConnection.localDescription.sdp && (copyArea.value === "" || copyArea.value.startsWith("Gathering"))) {
                                          try {
                                              copyArea.value = JSON.stringify(peerConnection.localDescription);
-                                             copyBtn.disabled = false; // Enable copy *after* SDP is definitely set
-                                             log("ICE gathering complete, SDP updated.");
+                                             copyBtn.disabled = false;
+                                             log("ICE gathering complete, SDP updated in text area.");
                                          } catch (err) {
                                              logError("Final SDP stringify error", err);
                                              copyArea.value = "Error finalizing SDP.";
@@ -351,16 +360,22 @@
                                          logError("ICE gathering finished but localDescription.sdp is missing.");
                                          copyArea.value = "Error: SDP generation failed.";
                                          copyBtn.disabled = true;
-                                     } else if (peerConnection.localDescription?.sdp) {
-                                         // If gathering finished quickly & SDP exists, ensure button is enabled
-                                         copyBtn.disabled = false;
+                                     } else if (peerConnection.localDescription.sdp){
+                                          copyBtn.disabled = false; // Ensure enabled if SDP is present
+                                          log("ICE gathering complete, copy button enabled.");
                                      }
-                                } else {
-                                    log(`ICE gathering finished, but PC state (${peerConnection?.signalingState}) is not suitable for update.`);
+                                } else if (e.candidate === null) { // Specifically check if gathering finished
+                                    log(`ICE gathering finished, but PC state (${peerConnection?.signalingState}) or localDesc is not suitable for update.`);
+                                    if (copyArea.value.startsWith("Gathering")) {
+                                        copyArea.value = "Error: Failed to generate Offer/Answer.";
+                                        copyBtn.disabled = true;
+                                    }
                                 }
-                             }, 100); // Short delay
+                             }, 150);
                          }
                      };
+
+                     // Event: Connection state changes
                      peerConnection.onconnectionstatechange = () => {
                           if (!peerConnection) return;
                           const state = peerConnection.connectionState;
@@ -371,129 +386,257 @@
                                      updateStatus("Connecting P2P...", 'connecting');
                                 }
                                 break;
-                             case "connected": break; // Handled by DC open
-                             case "disconnected": case "failed": case "closed":
+                             case "connected":
+                                log("PeerConnection connected.");
+                                break;
+                             case "disconnected":
+                             case "failed":
+                             case "closed":
                                   logError(`PC state leads to closure: ${state}`);
                                   closeConnection(`connectionstatechange_${state}`);
                                   break;
                          }
                      };
-                     peerConnection.ondatachannel = (e) => { log("ondatachannel event received"); dataChannel = e.channel; setupDataChannelEvents(dataChannel); };
-                     return true;
+
+                     // Event: Data channel received from peer
+                     peerConnection.ondatachannel = (e) => {
+                        log("ondatachannel event received");
+                        dataChannel = e.channel;
+                        setupDataChannelEvents(dataChannel);
+                     };
+
+                     return true; // PC created successfully
+
                  } catch(error) {
-                    logError("PC creation failed", error);
+                    logError("RTCPeerConnection creation failed", error);
                     updateStatus("Initialization Failed", "disconnected");
                     closeConnection("pc_create_exception");
-                    return false;
+                    return false; // PC creation failed
                  }
             }
 
             async function createOfferHandler() {
-                 closeConnection("createOfferHandler_start"); isOfferer = true; updateStatus("Initializing...", 'connecting');
-                 if (!createPeerConnection()) { return; } if (!peerConnection) { logError("PC null immediately after createPeerConnection success."); updateStatus("Internal Error", "disconnected"); return; }
+                 closeConnection("createOfferHandler_start");
+                 isOfferer = true;
+                 updateStatus("Initializing...", 'connecting');
+                 if (!createPeerConnection()) { return; }
+                 if (!peerConnection) { logError("PC null after createPeerConnection success."); updateStatus("Internal Error", "disconnected"); return; }
+
                  try {
-                     log("Creating Data Channel (offerer)"); dataChannel = peerConnection.createDataChannel('chat', { reliable: true }); setupDataChannelEvents(dataChannel);
-                     log("Creating Offer"); const offer = await peerConnection.createOffer(); if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                     log("Setting Local Description (Offer)"); await peerConnection.setLocalDescription(offer); if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                     copyArea.value = "Gathering ICE candidates..."; copyBtn.disabled = true; updateStatus("Offer Created. Copy & send when ready.", 'connecting');
-                     createOfferBtn.disabled = true; answerPasteArea.disabled = false; acceptAnswerBtn.disabled = false; offerPasteArea.disabled = true; createAnswerBtn.disabled = true;
-                 } catch (err) { logError("Offer creation/setting failed", err); closeConnection("offer_fail_exception"); }
+                     dataChannel = peerConnection.createDataChannel('chat', { reliable: true });
+                     setupDataChannelEvents(dataChannel);
+                     const offer = await peerConnection.createOffer();
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during offer creation."); closeConnection("offer_create_closed_state"); return; }
+                     await peerConnection.setLocalDescription(offer);
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription."); closeConnection("offer_setlocal_closed_state"); return; }
+
+                     copyArea.value = "Gathering ICE candidates...";
+                     copyBtn.disabled = true;
+                     updateStatus("Offer Created. Copy & send when ready.", 'connecting');
+                     createOfferBtn.disabled = true;
+                     answerPasteArea.disabled = false;
+                     acceptAnswerBtn.disabled = false;
+                     offerPasteArea.disabled = true;
+                     createAnswerBtn.disabled = true;
+                 } catch (err) {
+                     logError("Offer creation/setting failed", err);
+                     closeConnection("offer_fail_exception");
+                 }
             }
 
             async function createAnswerHandler() {
-                 const offerText = offerPasteArea.value.trim(); if (!offerText) { alert("Please paste the Offer message first."); return; }
-                 closeConnection("createAnswerHandler_start"); isOfferer = false; updateStatus("Initializing...", 'connecting');
-                 let offer; try { offer = JSON.parse(offerText); if (offer.type !== 'offer') throw new Error("Not an offer."); } catch (err) { logError("Invalid Offer JSON or type", err); alert("Invalid Offer message."); updateStatus("Invalid Offer", "disconnected"); closeConnection("answer_invalid_json"); return; }
-                 if (!createPeerConnection()) { return; } if (!peerConnection) { logError("PC null after createPeerConnection success (answer)."); updateStatus("Internal Error", "disconnected"); return; }
+                 const offerText = offerPasteArea.value.trim();
+                 if (!offerText) { alert("Please paste the Offer message first."); return; }
+                 closeConnection("createAnswerHandler_start");
+                 isOfferer = false;
+                 updateStatus("Initializing...", 'connecting');
+
+                 let offer;
                  try {
-                     log("Setting Remote Description (Offer)"); await peerConnection.setRemoteDescription(new RTCSessionDescription(offer)); if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                     log("Creating Answer"); const answer = await peerConnection.createAnswer(); if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                     log("Setting Local Description (Answer)"); await peerConnection.setLocalDescription(answer); if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                     copyArea.value = "Gathering ICE candidates..."; copyBtn.disabled = true; updateStatus("Answer Created. Copy & send back when ready.", 'connecting');
-                     createAnswerBtn.disabled = true; offerPasteArea.disabled = true; createOfferBtn.disabled = true; answerPasteArea.disabled = true; acceptAnswerBtn.disabled = true;
-                 } catch (err) { logError("Answer creation/setting failed", err); closeConnection("answer_fail_exception"); }
+                     offer = JSON.parse(offerText);
+                     if (offer.type !== 'offer') { throw new Error("Parsed JSON is not an offer."); }
+                 } catch (err) {
+                     logError("Invalid Offer JSON or type", err);
+                     alert("Invalid Offer message. Please paste the complete Offer JSON.");
+                     updateStatus("Invalid Offer", "disconnected");
+                     closeConnection("answer_invalid_json");
+                     return;
+                 }
+                 if (!createPeerConnection()) { return; }
+                 if (!peerConnection) { logError("PC null after createPeerConnection success (answer)."); updateStatus("Internal Error", "disconnected"); return; }
+
+                 try {
+                     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setRemoteDescription (offer)."); closeConnection("answer_setremote_offer_closed"); return; }
+                     const answer = await peerConnection.createAnswer();
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during createAnswer."); closeConnection("answer_create_closed"); return; }
+                     await peerConnection.setLocalDescription(answer);
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription (answer)."); closeConnection("answer_setlocal_closed"); return; }
+
+                     copyArea.value = "Gathering ICE candidates...";
+                     copyBtn.disabled = true;
+                     updateStatus("Answer Created. Copy & send back when ready.", 'connecting');
+                     createAnswerBtn.disabled = true;
+                     offerPasteArea.disabled = true;
+                     createOfferBtn.disabled = true;
+                     answerPasteArea.disabled = true;
+                     acceptAnswerBtn.disabled = true;
+                 } catch (err) {
+                     logError("Answer creation/setting failed", err);
+                     closeConnection("answer_fail_exception");
+                 }
             }
 
             async function acceptAnswerHandler() {
-                 if (!isOfferer) return; const answerText = answerPasteArea.value.trim(); if (!answerText) { alert("Please paste the Answer message first."); return; }
-                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') { logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`); alert("Invalid state."); updateStatus("Invalid State for Accept", "disconnected"); return; }
-                 let answer; try { answer = JSON.parse(answerText); if (answer.type !== 'answer') throw new Error("Not an answer."); } catch (err) { logError("Invalid Answer JSON or type", err); alert("Invalid Answer message."); updateStatus("Invalid Answer", "disconnected"); return; }
+                 if (!isOfferer) return;
+                 const answerText = answerPasteArea.value.trim();
+                 if (!answerText) { alert("Please paste the Answer message first."); return; }
+                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') {
+                     logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`);
+                     alert("Invalid state. Please create an offer first or check connection status.");
+                     updateStatus("Invalid State for Accept", "disconnected");
+                     return;
+                 }
+
+                 let answer;
                  try {
-                     log("Setting Remote Description (Answer)"); await peerConnection.setRemoteDescription(new RTCSessionDescription(answer)); if (!peerConnection || peerConnection.signalingState === 'closed') return;
-                     updateStatus("Connecting P2P...", 'connecting'); answerPasteArea.disabled = true; acceptAnswerBtn.disabled = true;
-                 } catch (err) { logError("Set Remote Description (Answer) failed", err); closeConnection("accept_fail_exception"); }
+                     answer = JSON.parse(answerText);
+                     if (answer.type !== 'answer') { throw new Error("Parsed JSON is not an answer."); }
+                 } catch (err) {
+                     logError("Invalid Answer JSON or type", err);
+                     alert("Invalid Answer message. Please paste the complete Answer JSON.");
+                     updateStatus("Invalid Answer", "disconnected");
+                     return;
+                 }
+
+                 try {
+                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setRemoteDescription (answer)."); closeConnection("accept_setremote_closed"); return; }
+                     updateStatus("Connecting P2P...", 'connecting');
+                     answerPasteArea.disabled = true;
+                     acceptAnswerBtn.disabled = true;
+                 } catch (err) {
+                     logError("Set Remote Description (Answer) failed", err);
+                     closeConnection("accept_fail_exception");
+                 }
             }
 
-            // --- UPDATED copyHandler ---
             function copyHandler() {
-                // 1. Check if Clipboard API is available
+                // Requires secure context (HTTPS or localhost)
                 if (!navigator.clipboard) {
-                    logError("Clipboard API not available/supported in this browser or context.");
-                    alert("Sorry, copying to clipboard is not supported or available in this browser.");
+                    logError("Clipboard API not available (requires HTTPS or localhost).");
+                    alert("Sorry, copying to clipboard is not supported or available in this browser (requires HTTPS or localhost).");
                     return;
                 }
-
-                // 2. Check if the button is enabled and there's text to copy
-                const textToCopy = copyArea.value; // Get value first
+                const textToCopy = copyArea.value;
                 if (textToCopy && !copyBtn.disabled) {
-                    log("Attempting to copy text..."); // Log attempt
-
                     navigator.clipboard.writeText(textToCopy).then(() => {
-                        // --- Success ---
                         log("Text copied to clipboard successfully!");
-
-                        const originalText = "Copy Message"; // Store original text explicitly
-                        copyBtn.textContent = 'Copied!'; // Provide visual feedback
-
-                        // Set timeout to revert the button text
+                        const originalText = "Copy Message";
+                        copyBtn.textContent = 'Copied!';
                         setTimeout(() => {
-                            // Check if the button still exists before changing text
-                            // Also check if it hasn't been disabled for other reasons in the meantime
                             if (copyBtn && copyBtn.textContent === 'Copied!') {
                                 copyBtn.textContent = originalText;
                             }
-                        }, 1500); // Revert after 1.5 seconds
-
+                        }, 1500);
                     }).catch(err => {
-                        // --- Failure ---
                         logError('Failed to copy text to clipboard: ', err);
-                        alert('Could not copy message to clipboard. See browser console for details (Ctrl+Shift+I or Cmd+Opt+I).');
+                        alert('Could not copy message to clipboard. See browser console for details.');
                     });
                 } else {
-                    // Log why copy wasn't attempted (e.g., button disabled, no text)
-                    if (copyBtn.disabled) {
-                        log("Copy button clicked, but it's disabled.");
-                    } else if (!textToCopy) {
-                        log("Copy button clicked, but there is no text in the copy area.");
-                    }
+                    log(`Copy not attempted. Disabled: ${copyBtn.disabled}, Text present: ${!!textToCopy}`);
                 }
             }
 
             function sendHandler() {
-                 const msg = messageInput.value.trim(); if (!msg) return;
-                 if (dataChannel && dataChannel.readyState === 'open') { try { dataChannel.send(msg); displayMessage(msg, 'own'); messageInput.value = ''; messageInput.focus(); adjustTextareaHeight(messageInput); } catch (e) { logError("Send DataChannel error", e); displayMessage("Error sending message.", "system"); closeConnection("send_error_exception"); } }
-                 else { logError(`Send attempt failed. DC state: ${dataChannel?.readyState}`); displayMessage("Not connected.", "system"); if(!dataChannel || ['closing', 'closed'].includes(dataChannel.readyState)) closeConnection("send_attempt_chan_closed"); }
+                 const msg = messageInput.value.trim();
+                 if (!msg) return;
+                 if (dataChannel && dataChannel.readyState === 'open') {
+                     try {
+                         dataChannel.send(msg);
+                         displayMessage(msg, 'own');
+                         messageInput.value = '';
+                         messageInput.focus();
+                         adjustTextareaHeight(messageInput);
+                     } catch (e) {
+                         logError("Send DataChannel error", e);
+                         displayMessage("Error sending message. Connection may be closing.", "system");
+                         closeConnection("send_error_exception");
+                     }
+                 } else {
+                     logError(`Send attempt failed. DataChannel state: ${dataChannel?.readyState}`);
+                     displayMessage("Cannot send message. Not connected.", "system");
+                     if(!dataChannel || ['closing', 'closed'].includes(dataChannel.readyState)) {
+                        closeConnection("send_attempt_chan_closed");
+                     }
+                 }
             }
-            function disconnectHandler() { displayMessage("Disconnecting...", "system"); closeConnection("disconnect_button"); }
 
-            function offerPasteHandler() { const txt = offerPasteArea.value.trim(); createAnswerBtn.disabled = !txt || createOfferBtn.disabled; if (txt && createOfferBtn) createOfferBtn.disabled = true; if (!txt && !isOfferer) createOfferBtn.disabled = false; }
-            function answerPasteHandler() { const txt = answerPasteArea.value.trim(); acceptAnswerBtn.disabled = !(txt && isOfferer && peerConnection?.signalingState === 'have-local-offer'); }
-            function adjustTextareaHeight(el) { if (!el) return; el.style.height='auto'; const maxH=150; const scrollH=el.scrollHeight; const newH=Math.min(scrollH, maxH); el.style.height=newH+'px'; el.style.overflowY=scrollH>maxH?'auto':'hidden'; }
-            function messageInputHandler(e) { if (e && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendHandler(); } else { adjustTextareaHeight(messageInput); } }
+            function disconnectHandler() {
+                displayMessage("Disconnecting...", "system");
+                closeConnection("disconnect_button");
+            }
 
+            // --- Input Event Handlers ---
+            function offerPasteHandler() {
+                const txt = offerPasteArea.value.trim();
+                createAnswerBtn.disabled = !txt || isOfferer;
+                if (txt) createOfferBtn.disabled = true;
+                if (!txt && !isOfferer && !peerConnection) createOfferBtn.disabled = false;
+            }
+            function answerPasteHandler() {
+                const txt = answerPasteArea.value.trim();
+                acceptAnswerBtn.disabled = !(txt && isOfferer && peerConnection?.signalingState === 'have-local-offer');
+            }
+            function adjustTextareaHeight(el) {
+                if (!el) return;
+                el.style.height = 'auto';
+                const maxHeight = 150;
+                const scrollHeight = el.scrollHeight;
+                const newHeight = Math.min(scrollHeight, maxHeight);
+                el.style.height = newHeight + 'px';
+                el.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
+            }
+            function messageInputHandler(e) {
+                // Handle Enter key press (without Shift) for sending
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendHandler();
+                } else {
+                    // Adjust height on other inputs like typing or pasting
+                    // Use setTimeout to allow paste event to fully complete before measuring
+                    setTimeout(() => adjustTextareaHeight(messageInput), 0);
+                }
+            }
+
+            // --- Initialization ---
             function initialize() {
+                 // Check crucial elements exist
                  if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !copyBtn || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) {
-                     logError("DOM Init Failed! One or more required elements not found.");
+                     logError("DOM Initialization Failed! One or more required elements not found.");
                      document.body.innerHTML = `<div style="padding: 30px; color: red; font-family: sans-serif;"><h1>Initialization Error</h1><p>Could not find all necessary HTML elements. Please check the console for details and ensure element IDs match the script.</p></div>`;
                      return;
                  }
-                 createOfferBtn.onclick = createOfferHandler; createAnswerBtn.onclick = createAnswerHandler; acceptAnswerBtn.onclick = acceptAnswerHandler; copyBtn.onclick = copyHandler; sendBtn.onclick = sendHandler; disconnectBtn.onclick = disconnectHandler;
-                 offerPasteArea.oninput = offerPasteHandler; answerPasteArea.oninput = answerPasteHandler; messageInput.onkeydown = messageInputHandler; messageInput.oninput = () => adjustTextareaHeight(messageInput);
-                 closeConnection("initialize"); adjustTextareaHeight(messageInput);
-                 log("P2P Chat Initialized");
+                 // Attach event listeners
+                 createOfferBtn.onclick = createOfferHandler;
+                 createAnswerBtn.onclick = createAnswerHandler;
+                 acceptAnswerBtn.onclick = acceptAnswerHandler;
+                 copyBtn.onclick = copyHandler;
+                 sendBtn.onclick = sendHandler;
+                 disconnectBtn.onclick = disconnectHandler;
+                 offerPasteArea.oninput = offerPasteHandler;
+                 answerPasteArea.oninput = answerPasteHandler;
+                 messageInput.onkeydown = messageInputHandler;
+                 messageInput.oninput = () => setTimeout(() => adjustTextareaHeight(messageInput), 0);
+
+                 closeConnection("initialize"); // Ensure clean state on load
+                 adjustTextareaHeight(messageInput);
+                 log("P2P Chat Initialized. Waiting for user action.");
             }
+
             initialize();
-        });
+
+        }); // End DOMContentLoaded
     </script>
 </body>
 </html>
