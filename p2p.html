@@ -133,7 +133,7 @@
         #message-input-container {display:flex;padding:8px 16px;border-top:1px solid var(--border-primary);background-color:var(--bg-primary);align-items:flex-end;flex-shrink:0;gap:8px}
         #message-input { flex-grow: 1; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--border-radius); margin-right: 8px; font-size: 1em; font-family: inherit; resize: none; background-color: var(--input-bg); line-height: 1.5; min-height: 34px; height: auto; overflow-y: hidden; color: var(--input-text); margin-bottom: 0; }
         #message-input:focus { outline: none; border-color: var(--input-focus-border); box-shadow: var(--input-focus-shadow); }
-        #send-btn {margin:0;flex-shrink:0;align-self:flex-end; margin-bottom: 0;} /* Ensure send button aligns with textarea */
+        #send-btn {margin:0;flex-shrink:0;align-self:flex-end; margin-bottom: 0;} /* Align with textarea */
         #status {font-weight:500;padding:10px 16px;font-size:1em;text-align:center;margin-bottom:24px;border-radius:var(--border-radius);border:1px solid transparent;transition:background-color .3s ease,color .3s ease,border-color .3s ease; flex-shrink: 0;}
         .status-disconnected {background-color:var(--status-error-bg);color:var(--status-error-text);border-color:var(--status-error-border)}
         .status-connecting {background-color:var(--status-connecting-bg);color:var(--status-connecting-text);border-color:var(--status-connecting-border)}
@@ -214,10 +214,10 @@
 
     <!-- Footer is now a sibling of .container, direct child of body -->
     <footer>
-        Stimuli Network • P2P Chat
+        Stimuli Network • Anonymous-AI Chat
     </footer>
 
-    <!-- JavaScript remains the same -->
+    <!-- JavaScript with UPDATED copyHandler -->
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             // --- DOM Elements ---
@@ -276,7 +276,7 @@
                  if(copyArea) copyArea.value = '';
                  if(offerPasteArea) { offerPasteArea.value = ''; offerPasteArea.disabled = false; }
                  if(answerPasteArea) { answerPasteArea.value = ''; answerPasteArea.disabled = false; }
-                 if(copyBtn) copyBtn.disabled = true;
+                 if(copyBtn) { copyBtn.disabled = true; copyBtn.textContent = 'Copy Message'; } // Reset text too
                  if(createAnswerBtn) createAnswerBtn.disabled = true;
                  if(acceptAnswerBtn) acceptAnswerBtn.disabled = true;
                  if(createOfferBtn) createOfferBtn.disabled = false;
@@ -332,29 +332,33 @@
                  try {
                      peerConnection = new RTCPeerConnection(rtcConfig);
                      peerConnection.onicecandidate = (e) => {
+                         // Use a timeout to ensure SDP is definitely available after gathering finishes
                          if (!peerConnection || peerConnection.signalingState === 'closed' || !e.candidate) {
                              setTimeout(() => {
-                                 if (peerConnection?.localDescription?.sdp && (copyArea.value === "" || copyArea.value.startsWith("Gathering"))) { // Check if empty or gathering
-                                     try {
-                                         copyArea.value = JSON.stringify(peerConnection.localDescription);
-                                         copyBtn.disabled = false;
-                                         log("ICE gathering complete, SDP updated.");
-                                     } catch (err) {
-                                         logError("Final SDP stringify error", err);
-                                         copyArea.value = "Error finalizing SDP.";
+                                // Check PC still exists and state is appropriate before updating
+                                if (peerConnection && ['have-local-offer', 'have-remote-offer', 'stable'].includes(peerConnection.signalingState)) {
+                                     if (peerConnection.localDescription?.sdp && (copyArea.value === "" || copyArea.value.startsWith("Gathering"))) {
+                                         try {
+                                             copyArea.value = JSON.stringify(peerConnection.localDescription);
+                                             copyBtn.disabled = false; // Enable copy *after* SDP is definitely set
+                                             log("ICE gathering complete, SDP updated.");
+                                         } catch (err) {
+                                             logError("Final SDP stringify error", err);
+                                             copyArea.value = "Error finalizing SDP.";
+                                             copyBtn.disabled = true;
+                                         }
+                                     } else if (copyArea.value.startsWith("Gathering")) {
+                                         logError("ICE gathering finished but localDescription.sdp is missing.");
+                                         copyArea.value = "Error: SDP generation failed.";
                                          copyBtn.disabled = true;
+                                     } else if (peerConnection.localDescription?.sdp) {
+                                         // If gathering finished quickly & SDP exists, ensure button is enabled
+                                         copyBtn.disabled = false;
                                      }
-                                 } else if (copyArea.value.startsWith("Gathering")) {
-                                     logError("ICE gathering finished but localDescription.sdp is missing.");
-                                     copyArea.value = "Error: SDP generation failed.";
-                                     copyBtn.disabled = true;
-                                 } else {
-                                    // SDP might already be populated if ICE finished quickly
-                                    if (peerConnection?.localDescription?.sdp) {
-                                        copyBtn.disabled = false;
-                                    }
-                                 }
-                             }, 100);
+                                } else {
+                                    log(`ICE gathering finished, but PC state (${peerConnection?.signalingState}) is not suitable for update.`);
+                                }
+                             }, 100); // Short delay
                          }
                      };
                      peerConnection.onconnectionstatechange = () => {
@@ -420,8 +424,49 @@
                  } catch (err) { logError("Set Remote Description (Answer) failed", err); closeConnection("accept_fail_exception"); }
             }
 
+            // --- UPDATED copyHandler ---
             function copyHandler() {
-                 if (copyArea.value && !copyBtn.disabled) { navigator.clipboard.writeText(copyArea.value).then(() => { const o = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = o; }, 1500); }).catch(err => { logError('Copy failed: ', err); alert('Could not copy.'); }); }
+                // 1. Check if Clipboard API is available
+                if (!navigator.clipboard) {
+                    logError("Clipboard API not available/supported in this browser or context.");
+                    alert("Sorry, copying to clipboard is not supported or available in this browser.");
+                    return;
+                }
+
+                // 2. Check if the button is enabled and there's text to copy
+                const textToCopy = copyArea.value; // Get value first
+                if (textToCopy && !copyBtn.disabled) {
+                    log("Attempting to copy text..."); // Log attempt
+
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        // --- Success ---
+                        log("Text copied to clipboard successfully!");
+
+                        const originalText = "Copy Message"; // Store original text explicitly
+                        copyBtn.textContent = 'Copied!'; // Provide visual feedback
+
+                        // Set timeout to revert the button text
+                        setTimeout(() => {
+                            // Check if the button still exists before changing text
+                            // Also check if it hasn't been disabled for other reasons in the meantime
+                            if (copyBtn && copyBtn.textContent === 'Copied!') {
+                                copyBtn.textContent = originalText;
+                            }
+                        }, 1500); // Revert after 1.5 seconds
+
+                    }).catch(err => {
+                        // --- Failure ---
+                        logError('Failed to copy text to clipboard: ', err);
+                        alert('Could not copy message to clipboard. See browser console for details (Ctrl+Shift+I or Cmd+Opt+I).');
+                    });
+                } else {
+                    // Log why copy wasn't attempted (e.g., button disabled, no text)
+                    if (copyBtn.disabled) {
+                        log("Copy button clicked, but it's disabled.");
+                    } else if (!textToCopy) {
+                        log("Copy button clicked, but there is no text in the copy area.");
+                    }
+                }
             }
 
             function sendHandler() {
@@ -437,7 +482,11 @@
             function messageInputHandler(e) { if (e && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendHandler(); } else { adjustTextareaHeight(messageInput); } }
 
             function initialize() {
-                 if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !copyBtn || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) { logError("DOM Init Failed!"); document.body.innerHTML = `...Error Message...`; return; }
+                 if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !copyBtn || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) {
+                     logError("DOM Init Failed! One or more required elements not found.");
+                     document.body.innerHTML = `<div style="padding: 30px; color: red; font-family: sans-serif;"><h1>Initialization Error</h1><p>Could not find all necessary HTML elements. Please check the console for details and ensure element IDs match the script.</p></div>`;
+                     return;
+                 }
                  createOfferBtn.onclick = createOfferHandler; createAnswerBtn.onclick = createAnswerHandler; acceptAnswerBtn.onclick = acceptAnswerHandler; copyBtn.onclick = copyHandler; sendBtn.onclick = sendHandler; disconnectBtn.onclick = disconnectHandler;
                  offerPasteArea.oninput = offerPasteHandler; answerPasteArea.oninput = answerPasteHandler; messageInput.onkeydown = messageInputHandler; messageInput.oninput = () => adjustTextareaHeight(messageInput);
                  closeConnection("initialize"); adjustTextareaHeight(messageInput);
