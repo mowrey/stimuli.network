@@ -177,13 +177,13 @@
                  <div class="step">
                     <label for="create-offer-btn">Step 1: Start Connection (Peer 1)</label>
                     <button id="create-offer-btn">Create Offer</button>
-                    <p>Click to generate an Offer message. Copy the generated text below and send it to your peer.</p> {/* Added 'below' for clarity */}
+                    <p>Click to generate an Offer message. Copy the generated text below and send it to your peer.</p>
                  </div>
                  <div class="step">
                     <label for="offer-paste-area">Step 2: Respond to Offer (Peer 2)</label>
                     <textarea id="offer-paste-area" placeholder="Paste the Offer message received from Peer 1 here..." rows="3"></textarea>
                     <button id="create-answer-btn" disabled>Create Answer</button>
-                    <p>Paste the Offer, then click to generate an Answer. Copy the generated Answer text below and send it back to Peer 1.</p> {/* Added 'below' for clarity */}
+                    <p>Paste the Offer, then click to generate an Answer. Copy the generated Answer text below and send it back to Peer 1.</p>
                  </div>
                  <div class="step">
                      <label for="answer-paste-area">Step 3: Accept Answer (Peer 1)</label>
@@ -227,7 +227,6 @@
             const answerPasteArea = document.getElementById('answer-paste-area');
             const acceptAnswerBtn = document.getElementById('accept-answer-btn');
             const copyArea = document.getElementById('copy-area');
-            // Removed: const copyBtn = ...
             const statusDiv = document.getElementById('status');
             const signalingDiv = document.getElementById('signaling');
             const chatInterfaceDiv = document.getElementById('chat-interface');
@@ -276,7 +275,6 @@
                  if(copyArea) copyArea.value = '';
                  if(offerPasteArea) { offerPasteArea.value = ''; offerPasteArea.disabled = false; }
                  if(answerPasteArea) { answerPasteArea.value = ''; answerPasteArea.disabled = false; }
-                 // Removed: copyBtn logic
                  if(createAnswerBtn) createAnswerBtn.disabled = true;
                  if(acceptAnswerBtn) acceptAnswerBtn.disabled = true;
                  if(createOfferBtn) createOfferBtn.disabled = false;
@@ -341,30 +339,29 @@
                          // When ICE gathering is complete (e.candidate is null)
                          if (!peerConnection || peerConnection.signalingState === 'closed' || !e.candidate) {
                              setTimeout(() => {
-                                if (peerConnection && ['have-local-offer', 'have-remote-offer', 'stable'].includes(peerConnection.signalingState) && peerConnection.localDescription) {
-                                     if (peerConnection.localDescription.sdp && (copyArea.value === "" || copyArea.value.startsWith("Gathering"))) {
-                                         try {
-                                             copyArea.value = JSON.stringify(peerConnection.localDescription);
-                                             log("ICE gathering complete, SDP updated in text area.");
-                                             // No button to enable
-                                         } catch (err) {
-                                             logError("Final SDP stringify error", err);
-                                             copyArea.value = "Error finalizing SDP.";
-                                         }
-                                     } else if (copyArea.value.startsWith("Gathering")) {
-                                         logError("ICE gathering finished but localDescription.sdp is missing.");
-                                         copyArea.value = "Error: SDP generation failed.";
-                                     } else if (peerConnection.localDescription.sdp){
-                                          log("ICE gathering complete.");
-                                          // No button to enable
-                                     }
-                                } else if (e.candidate === null) {
-                                    log(`ICE gathering finished, but PC state (${peerConnection?.signalingState}) or localDesc is not suitable for update.`);
+                                const pc = peerConnection; // Use stable reference inside timeout
+                                if (pc && ['have-local-offer', 'have-remote-offer', 'stable'].includes(pc.signalingState) && pc.localDescription && pc.localDescription.sdp) {
+                                    const currentSdpJson = JSON.stringify(pc.localDescription);
+                                    // Update the text area only if it's empty, showing "Gathering...", or showing different content
+                                    if (copyArea.value === "" || copyArea.value.startsWith("Gathering") || copyArea.value !== currentSdpJson ) {
+                                        try {
+                                            log(">>> Updating copyArea with final SDP..."); // ADDED THIS LOG
+                                            copyArea.value = currentSdpJson;
+                                            log("ICE gathering complete, SDP updated in text area.");
+                                        } catch (err) {
+                                            logError("Final SDP stringify error", err);
+                                            copyArea.value = "Error finalizing SDP.";
+                                        }
+                                    } else {
+                                         log("ICE gathering complete, copyArea already contains correct SDP.");
+                                    }
+                                } else if (e.candidate === null) { // Only log error if gathering explicitly finished unsuccessfully
+                                    log(`ICE gathering finished, but PC state (${pc?.signalingState}) or localDesc is not suitable for update.`);
                                     if (copyArea.value.startsWith("Gathering")) {
                                         copyArea.value = "Error: Failed to generate Offer/Answer.";
                                     }
                                 }
-                             }, 150);
+                            }, 150); // Allow time for SDP generation after last candidate
                          }
                      };
 
@@ -395,7 +392,6 @@
                         dataChannel = e.channel;
                         setupDataChannelEvents(dataChannel);
                      };
-
                      return true;
 
                  } catch(error) {
@@ -421,9 +417,8 @@
                      await peerConnection.setLocalDescription(offer);
                      if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription."); closeConnection("offer_setlocal_closed_state"); return; }
 
-                     copyArea.value = "Gathering ICE candidates...";
-                     // Removed: copyBtn.disabled = true;
-                     updateStatus("Offer Created. Copy the message below & send.", 'connecting'); // Modified status text
+                     copyArea.value = "Gathering ICE candidates..."; // Placeholder until onicecandidate finishes
+                     updateStatus("Offer Created. Copy the message below & send.", 'connecting');
                      createOfferBtn.disabled = true;
                      answerPasteArea.disabled = false;
                      acceptAnswerBtn.disabled = false;
@@ -464,9 +459,8 @@
                      await peerConnection.setLocalDescription(answer);
                      if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription (answer)."); closeConnection("answer_setlocal_closed"); return; }
 
-                     copyArea.value = "Gathering ICE candidates...";
-                     // Removed: copyBtn.disabled = true;
-                     updateStatus("Answer Created. Copy the message below & send back.", 'connecting'); // Modified status text
+                     copyArea.value = "Gathering ICE candidates..."; // Placeholder until onicecandidate finishes
+                     updateStatus("Answer Created. Copy the message below & send back.", 'connecting');
                      createAnswerBtn.disabled = true;
                      offerPasteArea.disabled = true;
                      createOfferBtn.disabled = true;
@@ -511,8 +505,6 @@
                      closeConnection("accept_fail_exception");
                  }
             }
-
-            // Removed: function copyHandler() { ... }
 
             function sendHandler() {
                  const msg = messageInput.value.trim();
@@ -574,19 +566,18 @@
 
             // --- Initialization ---
             function initialize() {
-                 // Check crucial elements exist (Removed copyBtn check)
+                 // Check crucial elements exist
                  if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) {
                      logError("DOM Initialization Failed! One or more required elements not found.");
                      document.body.innerHTML = `<div style="padding: 30px; color: red; font-family: sans-serif;"><h1>Initialization Error</h1><p>Could not find all necessary HTML elements. Please check the console for details and ensure element IDs match the script.</p></div>`;
                      return;
                  }
-                 // Attach event listeners (Removed copyBtn listener)
+                 // Attach event listeners
                  createOfferBtn.onclick = createOfferHandler;
                  createAnswerBtn.onclick = createAnswerHandler;
-                 acceptAnswerBtn.onclick = acceptAnswerBtn;
-                 // Removed: copyBtn.onclick = copyHandler;
+                 acceptAnswerBtn.onclick = acceptAnswerHandler;
                  sendBtn.onclick = sendHandler;
-                 disconnectBtn.onclick = disconnectBtn;
+                 disconnectBtn.onclick = disconnectHandler;
                  offerPasteArea.oninput = offerPasteHandler;
                  answerPasteArea.oninput = answerPasteHandler;
                  messageInput.onkeydown = messageInputHandler;
