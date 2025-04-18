@@ -7,17 +7,17 @@
     <style>
         /* --- GitHub Dark Theme Styling --- */
         :root {
-            /* Core Colors (GitHub Dark Dimmed Theme inspired) */
+            /* Core Colors */
             --bg-primary: #22272e; /* Canvas background */
             --bg-secondary: #1c2128; /* Page background */
             --border-primary: #444c56;
-            --border-secondary: #373e47; /* Slightly lighter border */
+            --border-secondary: #373e47;
             --text-primary: #adbac7; /* Body text */
             --text-secondary: #768390; /* Muted text */
             --text-link: #539bf5; /* Link blue */
             --text-white: #f0f6fc; /* Brighter white text */
 
-            /* Button Colors (Adapted for Dark) - ORIGINAL */
+            /* Button Colors */
             --btn-primary-bg: #347d39;
             --btn-primary-hover-bg: #46954a;
             --btn-primary-text: var(--text-white);
@@ -41,7 +41,7 @@
             --btn-danger-shadow: 0 0 transparent;
             --btn-danger-inset-shadow: inset 0 0 transparent;
 
-             /* Button Disabled State - ORIGINAL */
+             /* Button Disabled State */
             --btn-disabled-bg: rgba(55, 62, 71, 0.6);
             --btn-disabled-text: rgba(118, 131, 144, 0.7);
             --btn-disabled-border: rgba(197, 209, 217, 0.1);
@@ -53,7 +53,7 @@
             --input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
             --input-text: var(--text-primary);
 
-            /* Status/Alert Colors (Adjusted for Dark) */
+            /* Status/Alert Colors */
             --status-success-bg: rgba(52, 125, 57, 0.3);
             --status-success-text: #56d364;
             --status-success-border: rgba(86, 211, 100, 0.3);
@@ -64,7 +64,7 @@
             --status-connecting-text: #539bf5;
             --status-connecting-border: rgba(83, 155, 245, 0.3);
 
-            /* Message Colors (Adjusted for Dark) */
+            /* Message Colors */
             --own-message-bg: #2d5986;
             --own-message-text: var(--text-white);
             --own-message-border: #376c9d;
@@ -77,7 +77,7 @@
             --border-radius: 6px;
         }
 
-        /* --- Layout Adjustments - Footer Outside, Body Scroll Allowed --- */
+        /* --- Layout Adjustments --- */
         html { height: 100%; }
         body {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
@@ -89,10 +89,9 @@
             width:100%; max-width:720px; background:var(--bg-primary); border-radius:var(--border-radius);
             border:1px solid var(--border-primary); display:flex; flex-direction:column;
             flex-shrink: 1; min-height: 400px;
-            max-height: calc(100vh - 48px - 50px); /* Adjust 50px based on footer height + desired gap */
+            max-height: calc(100vh - 48px - 50px);
             overflow: hidden; margin: 24px 0;
         }
-         /* --- End Layout Adjustments --- */
 
         .header {padding:16px 24px;border-bottom:1px solid var(--border-primary);text-align:center;background-color:var(--bg-primary);flex-shrink:0}
         .header h2 {margin:0;font-size:1.35em;font-weight:600;color:var(--text-primary)}.header .brand {color:var(--text-link);font-weight:600}
@@ -107,9 +106,10 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease; color: var(--input-text);
         }
         textarea:focus {outline:none;border-color:var(--input-focus-border);box-shadow:var(--input-focus-shadow)}
+        textarea[readonly] { background-color: #2a3038; cursor: default; } /* Slightly different bg for read-only */
         input::placeholder,textarea::placeholder {color:var(--text-secondary)}
 
-        /* --- ORIGINAL BUTTON STYLES --- */
+        /* --- Button Styles --- */
         button {position:relative;display:inline-block;padding:5px 16px;font-size:14px;font-weight:500;line-height:20px;white-space:nowrap;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;border:1px solid var(--btn-primary-border);border-radius:var(--border-radius);appearance:none;transition:background-color .2s cubic-bezier(.3,0,.5,1),border-color .2s ease;margin-right:8px;margin-bottom:10px;text-align:center;background-color:var(--btn-primary-bg);color:var(--btn-primary-text);box-shadow:var(--btn-primary-shadow),var(--btn-primary-inset-shadow)}
         button:hover:not(:disabled) {background-color:var(--btn-primary-hover-bg);text-decoration:none;transition-duration:.1s}
         button:active:not(:disabled) {background-color:var(--btn-primary-hover-bg);box-shadow:none;transition:none}
@@ -120,8 +120,8 @@
         button.disconnect {color:var(--btn-danger-text);background-color:var(--btn-danger-bg);border-color:var(--btn-danger-border);box-shadow:var(--btn-danger-shadow),var(--btn-danger-inset-shadow)}
         button.disconnect:hover:not(:disabled) {background-color:var(--btn-danger-hover-bg);color:var(--btn-danger-hover-text);border-color:var(--btn-danger-hover-border)}
         button.disconnect:disabled {color:rgba(229,83,75,.7);background-color:var(--btn-disabled-bg);border-color:var(--btn-disabled-border)}
-        /* --- END ORIGINAL BUTTON STYLES --- */
 
+        /* --- Chat & Signaling Styles --- */
         #chat-interface {display:flex;flex-direction:column;flex-grow:1; min-height: 0;}
         #chat-area-wrapper {display:flex;flex-direction:column;flex-grow:1;overflow:hidden;margin-top:20px;border:1px solid var(--border-primary);border-radius:var(--border-radius);background-color:var(--bg-primary)}
         #chat-log {flex-grow:1;overflow-y:auto;padding:16px;font-size:1em;display:flex;flex-direction:column; min-height: 100px;}
@@ -140,15 +140,19 @@
         .status-connected {background-color:var(--status-success-bg);color:var(--status-success-text);border-color:var(--status-success-border)}
         .hidden {display:none!important}
         label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9em; color: var(--text-primary); }
-        #signaling { border: none; padding: 0; border-radius: 0; margin-top: 0; background-color: transparent; flex-shrink: 0; }
-        #signaling h3 { font-size: 1.2em; font-weight: 600; margin-top: 0; margin-bottom: 8px; color: var(--text-primary); text-align: center; padding-bottom: 8px; border-bottom: 1px solid var(--border-secondary); }
-        #signaling p { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 16px; text-align: center; line-height: 1.4; }
-        #signaling label { margin-top: 16px; margin-bottom: 4px;}
-        .step { margin-bottom: 16px; padding-top: 16px; border-top: 1px solid var(--border-secondary); }
-        .step:first-of-type { border-top: none; padding-top: 0; margin-top: 16px; }
-        .step p { font-size: 0.85em; color: var(--text-secondary); margin-top: 6px; margin-bottom: 0; text-align: left; }
 
-        /* --- Footer Styling (Outside Container) --- */
+        /* --- NEW Signaling Form Styles --- */
+        #signaling { border: none; padding: 0; border-radius: 0; margin-top: 0; background-color: transparent; flex-shrink: 0; }
+        #signaling h3 { font-size: 1.2em; font-weight: 600; margin-top: 0; margin-bottom: 16px; color: var(--text-primary); text-align: center; padding-bottom: 8px; border-bottom: 1px solid var(--border-secondary); }
+        #signaling p.intro { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 20px; text-align: center; line-height: 1.4; }
+        .connection-step { margin-bottom: 24px; padding-top: 16px; border-top: 1px solid var(--border-secondary); }
+        .connection-step:first-of-type { border-top: none; padding-top: 0; }
+        .connection-step label { margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 1em; display: block;} /* Make labels more prominent */
+        .connection-step p.instruction { font-size: 0.85em; color: var(--text-secondary); margin-top: 6px; margin-bottom: 10px; text-align: left; line-height: 1.4;}
+        .connection-step textarea { margin-top: 4px; margin-bottom: 10px; } /* Add some space around textareas */
+        .connection-step button { margin-top: 4px; margin-bottom: 6px; } /* Adjust button margin */
+
+        /* --- Footer Styling --- */
         footer {
             text-align: center; padding: 16px 24px; font-size: .85em;
             color: var(--text-secondary); width: 100%; box-sizing: border-box;
@@ -160,43 +164,42 @@
 </head>
 <body>
 
-    <!-- Main Content Container -->
     <div class="container">
         <div class="header">
             <h2><span class="brand">Stimuli Network</span> P2P Chat</h2>
         </div>
 
-        <!-- Content Area (Scrolls internally) -->
         <div class="content-area">
             <div id="status" class="status status-disconnected">Status: Disconnected</div>
 
-            <!-- Signaling Section -->
+            <!-- Signaling Section - RESTRUCTURED -->
             <div id="signaling">
                  <h3>Connection Setup</h3>
-                 <p>Exchange messages below using a secure method (e.g., Signal, email) to establish a direct P2P connection.</p>
-                 <div class="step">
-                    <label for="create-offer-btn">Step 1: Start Connection (Peer 1)</label>
-                    <button id="create-offer-btn">Create Offer</button>
-                    <p>Click to generate an Offer message. Copy the generated text below and send it to your peer.</p>
+                 <p class="intro">To connect, one peer must initiate by creating an Offer. Exchange the Offer and Answer messages securely using your preferred method.</p>
+
+                 <div class="connection-step">
+                    <label for="create-offer-btn">1. Generate Connection Offer (Initiator)</label>
+                    <button id="create-offer-btn">Generate Offer</button>
+                    <textarea id="offer-display-area" readonly placeholder="Offer message will appear here after clicking Generate..." rows="4"></textarea>
+                    <p class="instruction">Click Generate, then copy the entire Offer message above. Send it securely to your peer and wait for their Answer.</p>
                  </div>
-                 <div class="step">
-                    <label for="offer-paste-area">Step 2: Respond to Offer (Peer 2)</label>
-                    <textarea id="offer-paste-area" placeholder="Paste the Offer message received from Peer 1 here..." rows="3"></textarea>
-                    <button id="create-answer-btn" disabled>Create Answer</button>
-                    <p>Paste the Offer, then click to generate an Answer. Copy the generated Answer text below and send it back to Peer 1.</p>
+
+                 <div class="connection-step">
+                     <label for="answer-paste-area">2. Use Peer's Answer (Initiator)</label>
+                     <textarea id="answer-paste-area" placeholder="Paste the Answer message received from your peer here..." rows="4"></textarea>
+                     <button id="accept-answer-btn" disabled>Connect Using Answer</button>
+                     <p class="instruction">Once you receive the Answer from your peer, paste it above and click Connect.</p>
                  </div>
-                 <div class="step">
-                     <label for="answer-paste-area">Step 3: Accept Answer (Peer 1)</label>
-                    <textarea id="answer-paste-area" placeholder="Paste the Answer message received from Peer 2 here..." rows="3"></textarea>
-                    <button id="accept-answer-btn" disabled>Accept Answer</button>
-                     <p>Paste the Answer, then click Accept to complete the connection.</p>
-                </div>
-                 <div class="step">
-                    <label for="copy-area">Your Generated Message (Offer/Answer)</label>
-                    <textarea id="copy-area" readonly placeholder="Your Offer or Answer will appear here..." rows="3"></textarea>
-                    <!-- Copy Button REMOVED -->
+
+                 <div class="connection-step">
+                    <label for="offer-paste-area"><i>Alternatively:</i> Respond to an Offer (Responder)</label>
+                    <textarea id="offer-paste-area" placeholder="If you received an Offer, paste it here..." rows="4"></textarea>
+                    <button id="create-answer-btn" disabled>Generate Answer to Offer</button>
+                    <textarea id="answer-display-area" readonly placeholder="Your Answer message will appear here after clicking Generate..." rows="4"></textarea>
+                    <p class="instruction">Paste the Offer message you received above, then click Generate Answer. Copy the entire Answer message generated and send it securely back to the initiating peer.</p>
                  </div>
-            </div>
+
+            </div> <!-- End #signaling -->
 
             <!-- Chat Section (Initially Hidden) -->
             <div id="chat-interface" class="hidden">
@@ -212,21 +215,23 @@
         </div> <!-- End content-area -->
     </div> <!-- End container -->
 
-    <!-- Footer is now a sibling of .container, direct child of body -->
     <footer>
         Stimuli Network • Anonymous-AI Chat
     </footer>
 
-    <!-- JavaScript - REMOVED copyHandler and related logic -->
+    <!-- JavaScript - Updated for new form structure -->
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             // --- DOM Elements ---
             const createOfferBtn = document.getElementById('create-offer-btn');
-            const offerPasteArea = document.getElementById('offer-paste-area');
-            const createAnswerBtn = document.getElementById('create-answer-btn');
+            const offerDisplayArea = document.getElementById('offer-display-area'); // New ID
             const answerPasteArea = document.getElementById('answer-paste-area');
             const acceptAnswerBtn = document.getElementById('accept-answer-btn');
-            const copyArea = document.getElementById('copy-area');
+
+            const offerPasteArea = document.getElementById('offer-paste-area'); // New ID for responder
+            const createAnswerBtn = document.getElementById('create-answer-btn');
+            const answerDisplayArea = document.getElementById('answer-display-area'); // New ID
+
             const statusDiv = document.getElementById('status');
             const signalingDiv = document.getElementById('signaling');
             const chatInterfaceDiv = document.getElementById('chat-interface');
@@ -272,12 +277,18 @@
             }
 
             function resetUIForDisconnect() {
-                 if(copyArea) copyArea.value = '';
-                 if(offerPasteArea) { offerPasteArea.value = ''; offerPasteArea.disabled = false; }
-                 if(answerPasteArea) { answerPasteArea.value = ''; answerPasteArea.disabled = false; }
-                 if(createAnswerBtn) createAnswerBtn.disabled = true;
-                 if(acceptAnswerBtn) acceptAnswerBtn.disabled = true;
-                 if(createOfferBtn) createOfferBtn.disabled = false;
+                 // Clear all text areas involved in signaling
+                 if(offerDisplayArea) offerDisplayArea.value = '';
+                 if(answerPasteArea) { answerPasteArea.value = ''; answerPasteArea.disabled = false; } // Re-enable pasting answer
+                 if(offerPasteArea) { offerPasteArea.value = ''; offerPasteArea.disabled = false; } // Re-enable pasting offer
+                 if(answerDisplayArea) answerDisplayArea.value = '';
+
+                 // Reset button states
+                 if(createAnswerBtn) createAnswerBtn.disabled = true; // Disabled until offer is pasted
+                 if(acceptAnswerBtn) acceptAnswerBtn.disabled = true; // Disabled until answer is pasted (by initiator)
+                 if(createOfferBtn) createOfferBtn.disabled = false; // Re-enable creating offer
+
+                 // Reset chat input
                  if(messageInput) { messageInput.value = ''; messageInput.style.height = 'auto'; adjustTextareaHeight(messageInput); }
                  if(chatLogInner) chatLogInner.innerHTML = '';
             }
@@ -336,32 +347,37 @@
                      peerConnection = new RTCPeerConnection(rtcConfig);
 
                      peerConnection.onicecandidate = (e) => {
-                         // When ICE gathering is complete (e.candidate is null)
                          if (!peerConnection || peerConnection.signalingState === 'closed' || !e.candidate) {
                              setTimeout(() => {
-                                const pc = peerConnection; // Use stable reference inside timeout
+                                const pc = peerConnection;
                                 if (pc && ['have-local-offer', 'have-remote-offer', 'stable'].includes(pc.signalingState) && pc.localDescription && pc.localDescription.sdp) {
-                                    const currentSdpJson = JSON.stringify(pc.localDescription);
-                                    // Update the text area only if it's empty, showing "Gathering...", or showing different content
-                                    if (copyArea.value === "" || copyArea.value.startsWith("Gathering") || copyArea.value !== currentSdpJson ) {
+                                    const sdpJson = JSON.stringify(pc.localDescription);
+                                    // Determine which text area to update based on role
+                                    const targetArea = isOfferer ? offerDisplayArea : answerDisplayArea;
+                                    const targetAreaName = isOfferer ? 'Offer' : 'Answer';
+
+                                    if (targetArea && (targetArea.value === "" || targetArea.value.startsWith("Gathering") || targetArea.value !== sdpJson )) {
                                         try {
-                                            log(">>> Updating copyArea with final SDP..."); // ADDED THIS LOG
-                                            copyArea.value = currentSdpJson;
-                                            log("ICE gathering complete, SDP updated in text area.");
+                                            log(`>>> Updating ${targetAreaName} display area with final SDP...`);
+                                            targetArea.value = sdpJson;
+                                            log(`ICE gathering complete, ${targetAreaName} SDP updated in text area.`);
                                         } catch (err) {
-                                            logError("Final SDP stringify error", err);
-                                            copyArea.value = "Error finalizing SDP.";
+                                            logError(`Final ${targetAreaName} SDP stringify error`, err);
+                                            if(targetArea) targetArea.value = `Error finalizing ${targetAreaName} SDP.`;
                                         }
                                     } else {
-                                         log("ICE gathering complete, copyArea already contains correct SDP.");
+                                         log(`ICE gathering complete, ${targetAreaName} display area already contains correct SDP.`);
                                     }
-                                } else if (e.candidate === null) { // Only log error if gathering explicitly finished unsuccessfully
+                                } else if (e.candidate === null) {
                                     log(`ICE gathering finished, but PC state (${pc?.signalingState}) or localDesc is not suitable for update.`);
-                                    if (copyArea.value.startsWith("Gathering")) {
-                                        copyArea.value = "Error: Failed to generate Offer/Answer.";
+                                    // Update placeholder if still showing "Gathering..."
+                                    const targetArea = isOfferer ? offerDisplayArea : answerDisplayArea;
+                                     const targetAreaName = isOfferer ? 'Offer' : 'Answer';
+                                    if (targetArea && targetArea.value.startsWith("Gathering")) {
+                                        targetArea.value = `Error: Failed to generate ${targetAreaName}.`;
                                     }
                                 }
-                            }, 150); // Allow time for SDP generation after last candidate
+                            }, 150);
                          }
                      };
 
@@ -375,9 +391,7 @@
                                      updateStatus("Connecting P2P...", 'connecting');
                                 }
                                 break;
-                             case "connected":
-                                log("PeerConnection connected.");
-                                break;
+                             case "connected": log("PeerConnection connected."); break;
                              case "disconnected":
                              case "failed":
                              case "closed":
@@ -402,6 +416,9 @@
                  }
             }
 
+            // --- Button Click Handlers ---
+
+            // Initiator starts here
             async function createOfferHandler() {
                  closeConnection("createOfferHandler_start");
                  isOfferer = true;
@@ -417,23 +434,66 @@
                      await peerConnection.setLocalDescription(offer);
                      if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription."); closeConnection("offer_setlocal_closed_state"); return; }
 
-                     copyArea.value = "Gathering ICE candidates..."; // Placeholder until onicecandidate finishes
-                     updateStatus("Offer Created. Copy the message below & send.", 'connecting');
+                     offerDisplayArea.value = "Gathering ICE candidates..."; // Show progress here
+                     updateStatus("Offer Generated. Copy the Offer message & send.", 'connecting');
+
+                     // Disable conflicting actions
                      createOfferBtn.disabled = true;
-                     answerPasteArea.disabled = false;
-                     acceptAnswerBtn.disabled = false;
                      offerPasteArea.disabled = true;
                      createAnswerBtn.disabled = true;
+                     // Enable next step for initiator
+                     answerPasteArea.disabled = false;
+                     acceptAnswerBtn.disabled = true; // Still need answer pasted
+
                  } catch (err) {
                      logError("Offer creation/setting failed", err);
                      closeConnection("offer_fail_exception");
+                     if(offerDisplayArea) offerDisplayArea.value = "Error creating Offer."; // Show error
                  }
             }
 
+             // Initiator finishes here
+             async function acceptAnswerHandler() {
+                 if (!isOfferer) return; // Should only be called by initiator
+                 const answerText = answerPasteArea.value.trim();
+                 if (!answerText) { alert("Please paste the Answer message first."); return; }
+                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') {
+                     logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`);
+                     alert("Invalid state. Please generate an Offer first or check connection status.");
+                     updateStatus("Invalid State for Accept", "disconnected");
+                     return;
+                 }
+
+                 let answer;
+                 try {
+                     answer = JSON.parse(answerText);
+                     if (answer.type !== 'answer') { throw new Error("Parsed JSON is not an answer."); }
+                 } catch (err) {
+                     logError("Invalid Answer JSON or type", err);
+                     alert("Invalid Answer message. Please paste the complete Answer JSON.");
+                     updateStatus("Invalid Answer", "disconnected");
+                     return;
+                 }
+
+                 try {
+                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setRemoteDescription (answer)."); closeConnection("accept_setremote_closed"); return; }
+                     updateStatus("Connecting P2P...", 'connecting');
+                     // Disable final initiator steps
+                     answerPasteArea.disabled = true;
+                     acceptAnswerBtn.disabled = true;
+                 } catch (err) {
+                     logError("Set Remote Description (Answer) failed", err);
+                     closeConnection("accept_fail_exception");
+                 }
+            }
+
+            // Responder acts here
             async function createAnswerHandler() {
                  const offerText = offerPasteArea.value.trim();
                  if (!offerText) { alert("Please paste the Offer message first."); return; }
-                 closeConnection("createAnswerHandler_start");
+
+                 closeConnection("createAnswerHandler_start"); // Start fresh as responder
                  isOfferer = false;
                  updateStatus("Initializing...", 'connecting');
 
@@ -459,53 +519,25 @@
                      await peerConnection.setLocalDescription(answer);
                      if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setLocalDescription (answer)."); closeConnection("answer_setlocal_closed"); return; }
 
-                     copyArea.value = "Gathering ICE candidates..."; // Placeholder until onicecandidate finishes
-                     updateStatus("Answer Created. Copy the message below & send back.", 'connecting');
-                     createAnswerBtn.disabled = true;
-                     offerPasteArea.disabled = true;
+                     answerDisplayArea.value = "Gathering ICE candidates..."; // Show progress here
+                     updateStatus("Answer Generated. Copy the Answer message & send back.", 'connecting');
+
+                     // Disable conflicting actions
                      createOfferBtn.disabled = true;
                      answerPasteArea.disabled = true;
                      acceptAnswerBtn.disabled = true;
+                     // Disable responder actions
+                     offerPasteArea.disabled = true;
+                     createAnswerBtn.disabled = true;
+
                  } catch (err) {
                      logError("Answer creation/setting failed", err);
                      closeConnection("answer_fail_exception");
+                      if(answerDisplayArea) answerDisplayArea.value = "Error creating Answer."; // Show error
                  }
             }
 
-            async function acceptAnswerHandler() {
-                 if (!isOfferer) return;
-                 const answerText = answerPasteArea.value.trim();
-                 if (!answerText) { alert("Please paste the Answer message first."); return; }
-                 if (!peerConnection || peerConnection.signalingState !== 'have-local-offer') {
-                     logError(`Invalid state for acceptAnswer: ${peerConnection?.signalingState}`);
-                     alert("Invalid state. Please create an offer first or check connection status.");
-                     updateStatus("Invalid State for Accept", "disconnected");
-                     return;
-                 }
-
-                 let answer;
-                 try {
-                     answer = JSON.parse(answerText);
-                     if (answer.type !== 'answer') { throw new Error("Parsed JSON is not an answer."); }
-                 } catch (err) {
-                     logError("Invalid Answer JSON or type", err);
-                     alert("Invalid Answer message. Please paste the complete Answer JSON.");
-                     updateStatus("Invalid Answer", "disconnected");
-                     return;
-                 }
-
-                 try {
-                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-                     if (!peerConnection || peerConnection.signalingState === 'closed') { log("PC closed during setRemoteDescription (answer)."); closeConnection("accept_setremote_closed"); return; }
-                     updateStatus("Connecting P2P...", 'connecting');
-                     answerPasteArea.disabled = true;
-                     acceptAnswerBtn.disabled = true;
-                 } catch (err) {
-                     logError("Set Remote Description (Answer) failed", err);
-                     closeConnection("accept_fail_exception");
-                 }
-            }
-
+            // Chat message sending
             function sendHandler() {
                  const msg = messageInput.value.trim();
                  if (!msg) return;
@@ -530,20 +562,32 @@
                  }
             }
 
+            // Disconnect button
             function disconnectHandler() {
                 displayMessage("Disconnecting...", "system");
                 closeConnection("disconnect_button");
             }
 
             // --- Input Event Handlers ---
-            function offerPasteHandler() {
+            function offerPasteHandler() { // For Responder pasting Offer
                 const txt = offerPasteArea.value.trim();
-                createAnswerBtn.disabled = !txt || isOfferer;
-                if (txt) createOfferBtn.disabled = true;
-                if (!txt && !isOfferer && !peerConnection) createOfferBtn.disabled = false;
+                createAnswerBtn.disabled = !txt; // Enable Generate Answer if text is present
+                if (txt) {
+                    createOfferBtn.disabled = true; // Disable creating offer if pasting one
+                    answerPasteArea.disabled = true; // Disable pasting answer area
+                    acceptAnswerBtn.disabled = true; // Disable accepting answer button
+                } else {
+                    // If cleared, re-enable initiator options if not already offerer
+                    if (!isOfferer) {
+                        createOfferBtn.disabled = false;
+                        answerPasteArea.disabled = false;
+                        // acceptAnswerBtn remains disabled until Offer is generated
+                    }
+                }
             }
-            function answerPasteHandler() {
+            function answerPasteHandler() { // For Initiator pasting Answer
                 const txt = answerPasteArea.value.trim();
+                 // Enable Accept Answer only if text is present AND we are the offerer AND state is right
                 acceptAnswerBtn.disabled = !(txt && isOfferer && peerConnection?.signalingState === 'have-local-offer');
             }
             function adjustTextareaHeight(el) {
@@ -567,24 +611,24 @@
             // --- Initialization ---
             function initialize() {
                  // Check crucial elements exist
-                 if (!createOfferBtn || !offerPasteArea || !createAnswerBtn || !answerPasteArea || !acceptAnswerBtn || !copyArea || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) {
-                     logError("DOM Initialization Failed! One or more required elements not found.");
+                 if (!createOfferBtn || !offerDisplayArea || !answerPasteArea || !acceptAnswerBtn || !offerPasteArea || !createAnswerBtn || !answerDisplayArea || !statusDiv || !signalingDiv || !chatInterfaceDiv || !chatLog || !chatLogInner || !messageInput || !sendBtn || !disconnectBtn) {
+                     logError("DOM Initialization Failed! One or more required signaling elements not found.");
                      document.body.innerHTML = `<div style="padding: 30px; color: red; font-family: sans-serif;"><h1>Initialization Error</h1><p>Could not find all necessary HTML elements. Please check the console for details and ensure element IDs match the script.</p></div>`;
                      return;
                  }
                  // Attach event listeners
                  createOfferBtn.onclick = createOfferHandler;
-                 createAnswerBtn.onclick = createAnswerHandler;
-                 acceptAnswerBtn.onclick = acceptAnswerHandler;
+                 acceptAnswerBtn.onclick = acceptAnswerHandler; // For initiator
+                 createAnswerBtn.onclick = createAnswerHandler; // For responder
                  sendBtn.onclick = sendHandler;
                  disconnectBtn.onclick = disconnectHandler;
-                 offerPasteArea.oninput = offerPasteHandler;
-                 answerPasteArea.oninput = answerPasteHandler;
+                 offerPasteArea.oninput = offerPasteHandler; // Responder pasting offer
+                 answerPasteArea.oninput = answerPasteHandler; // Initiator pasting answer
                  messageInput.onkeydown = messageInputHandler;
                  messageInput.oninput = () => setTimeout(() => adjustTextareaHeight(messageInput), 0);
 
-                 closeConnection("initialize");
-                 adjustTextareaHeight(messageInput);
+                 closeConnection("initialize"); // Reset state
+                 adjustTextareaHeight(messageInput); // Adjust chat input height
                  log("P2P Chat Initialized. Waiting for user action.");
             }
 
